@@ -7,6 +7,7 @@ package bazadanychmagazynudrzwi_app;
  */
 public abstract class Produkt
 {
+
     protected int typ;
     protected int numer_ID;
     protected int numer_WZ;
@@ -22,6 +23,16 @@ public abstract class Produkt
     protected void generuj_ID(int id)
     {
         this.numer_ID = id;
+    }
+
+    public boolean compareTo(Dane_Producenta dane_producenta)
+    {
+        return this.dane_producenta.equals(dane_producenta);
+    }
+
+    public boolean compareTo(int id)
+    {
+        return numer_ID == id;
     }
 
     public int usun()
