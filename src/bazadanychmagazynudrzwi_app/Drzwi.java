@@ -49,16 +49,4 @@ public class Drzwi extends Produkt
         return this.wymiary.equals(wymiary);
     }
 
-    public boolean compareTo(Dane_Producenta dane_producenta)
-    {
-        return this.dane_producenta.equals(dane_producenta);
-    }
-
-    public boolean compareTo(int id)
-    {
-        return super.numer_ID == id;
-    }
-
-    
-    
 }
