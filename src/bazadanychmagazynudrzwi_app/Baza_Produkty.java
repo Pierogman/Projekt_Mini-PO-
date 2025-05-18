@@ -23,8 +23,8 @@ public class Baza_Produkty
     public ArrayList<Integer> lista_urzytych_ID = new ArrayList<>();
 
     public ArrayList<Drzwi> lista_drzwi = new ArrayList<>();
-    public ArrayList<Klamki> lista_klamek = new ArrayList<>();
-    public ArrayList<Oscerznice> lista_oscierznic = new ArrayList<>();
+    public ArrayList<Klamka> lista_klamek = new ArrayList<>();
+    public ArrayList<Oscierznica> lista_oscierznic = new ArrayList<>();
 
     public Baza_Produkty()
     {
@@ -41,12 +41,12 @@ public class Baza_Produkty
         lista_drzwi.add(drzwi);
     }
 
-    public void dodaj(Klamki klamka)
+    public void dodaj(Klamka klamka)
     {
         lista_klamek.add(klamka);
     }
 
-    public void dodaj(Oscerznice oscierznica)
+    public void dodaj(Oscierznica oscierznica)
     {
         lista_oscierznic.add(oscierznica);
     }
@@ -68,7 +68,7 @@ public class Baza_Produkty
             }
         }
 
-        for (Klamki k : lista_klamek)
+        for (Klamka k : lista_klamek)
         {
             if (k.compare_ID(numer_ID))
             {
@@ -78,7 +78,7 @@ public class Baza_Produkty
             }
         }
 
-        for (Oscerznice o : lista_oscierznic)
+        for (Oscierznica o : lista_oscierznic)
         {
             if (o.compare_ID(numer_ID))
             {
@@ -97,11 +97,11 @@ public class Baza_Produkty
         {
             System.out.println(d.toFormatedString(table_format));
         }
-        for (Klamki k : lista_klamek)
+        for (Klamka k : lista_klamek)
         {
             System.out.println(k.toFormatedString(table_format));
         }
-        for (Oscerznice o : lista_oscierznic)
+        for (Oscierznica o : lista_oscierznic)
         {
             System.out.println(o.toFormatedString(table_format));
         }
@@ -117,7 +117,7 @@ public class Baza_Produkty
                 System.out.println(d.toFormatedString(table_format));
             }
         }
-        for (Klamki k : lista_klamek)
+        for (Klamka k : lista_klamek)
         {
             if (k.compare_PZ(numer_PZ))
             {
@@ -125,7 +125,7 @@ public class Baza_Produkty
             }
 
         }
-        for (Oscerznice o : lista_oscierznic)
+        for (Oscierznica o : lista_oscierznic)
         {
             if (o.compare_PZ(numer_PZ))
             {
@@ -145,7 +145,7 @@ public class Baza_Produkty
                 System.out.println(d.toFormatedString(table_format));
             }
         }
-        for (Klamki k : lista_klamek)
+        for (Klamka k : lista_klamek)
         {
             if (k.compare_Producent(nazwa_producenta))
             {
@@ -153,7 +153,7 @@ public class Baza_Produkty
             }
 
         }
-        for (Oscerznice o : lista_oscierznic)
+        for (Oscierznica o : lista_oscierznic)
         {
             if (o.compare_Producent(nazwa_producenta))
             {
@@ -173,7 +173,7 @@ public class Baza_Produkty
                 System.out.println(d.toFormatedString(table_format));
             }
         }
-        for (Oscerznice o : lista_oscierznic)
+        for (Oscierznica o : lista_oscierznic)
         {
             if (o.compareTo(wymiary))
             {
