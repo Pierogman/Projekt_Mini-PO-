@@ -21,13 +21,13 @@ public class BazaDanychMagazynuDrzwi_App
         Drzwi drzwi_1 = new Drzwi(1,producent_1, wymiary_1, "Dab", 1);
         Drzwi drzwi_2 = new Drzwi(1,producent_2, wymiary_2, "Bialy" ,1);
         
-        Oscerznice oscierznica_1 = new Oscerznice(1, producent_4, wymiary_1, "Bialy");
-        Oscerznice oscierznica_2 = new Oscerznice(1, producent_3, wymiary_2, "Bialy");
-        Oscerznice oscierznica_3 = new Oscerznice(1, producent_4, wymiary_3, "Bialy");
+        Oscierznica oscierznica_1 = new Oscierznica(1, producent_4, wymiary_1, "Bialy");
+        Oscierznica oscierznica_2 = new Oscierznica(1, producent_3, wymiary_2, "Bialy");
+        Oscierznica oscierznica_3 = new Oscierznica(1, producent_4, wymiary_3, "Bialy");
         
-        Klamki klamka_1 = new Klamki(1, producent_4, "Srebro");
-        Klamki klamka_2 = new Klamki(1, producent_4, "Srebro");
-        Klamki klamka_3 = new Klamki(1, producent_4, "Srebro");
+        Klamka klamka_1 = new Klamka(1, producent_4, "Srebro");
+        Klamka klamka_2 = new Klamka(1, producent_4, "Srebro");
+        Klamka klamka_3 = new Klamka(1, producent_4, "Srebro");
         
         
         Baza_Produkty baza_p = new Baza_Produkty();
