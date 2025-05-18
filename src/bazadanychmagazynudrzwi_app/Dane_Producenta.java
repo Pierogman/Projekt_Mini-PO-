@@ -26,12 +26,22 @@ public class Dane_Producenta
     @Override
     public String toString()
     {
+        return nazwa_producenta + " " + nazwa_produktu;
+    }
+
+    public String formatuj_do_zapisu()
+    {
         return nazwa_producenta + ";" + nazwa_produktu;
     }
 
-    public boolean equals(Dane_Producenta dane_producenta)
+    public boolean compareTo(Dane_Producenta dane_producenta)
     {
-        return this.nazwa_producenta.equals(dane_producenta.nazwa_producenta) &&
-                this.nazwa_produktu.equals(dane_producenta.nazwa_produktu);
+        return this.nazwa_producenta.equals(dane_producenta.nazwa_producenta)
+                && this.nazwa_produktu.equals(dane_producenta.nazwa_produktu);
+    }
+
+    public boolean compareTo(String nazwa_producenta)
+    {
+        return this.nazwa_producenta.equals(nazwa_producenta);
     }
 }
