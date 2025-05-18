@@ -10,7 +10,7 @@ public abstract class Produkt
 
     protected int typ;
     protected int numer_ID;
-    protected int numer_WZ;
+    protected int numer_PZ;
     protected Dane_Producenta dane_producenta;
 
     // Generowanie id na podstawie ilosci produktu
@@ -27,19 +27,29 @@ public abstract class Produkt
 
     public boolean compareTo(Dane_Producenta dane_producenta)
     {
-        return this.dane_producenta.equals(dane_producenta);
+        return this.dane_producenta.compareTo(dane_producenta);
     }
 
-    public boolean compareTo(int id)
+    public boolean compare_ID(int numer_ID)
     {
-        return numer_ID == id;
+        return this.numer_ID == numer_ID;
+    }
+
+    public boolean compare_PZ(int numer_PZ)
+    {
+        return this.numer_PZ == numer_PZ;
+    }
+
+    public boolean compare_Producent(String nazwa_producenta)
+    {
+        return dane_producenta.compareTo(nazwa_producenta);
     }
 
     public int usun()
     {
         int urzywane_id = this.numer_ID;
         numer_ID = 0;
-        numer_WZ = 0;
+        numer_PZ = 0;
 
         return urzywane_id;
     }
