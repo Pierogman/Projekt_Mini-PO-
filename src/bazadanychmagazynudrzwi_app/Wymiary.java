@@ -29,12 +29,17 @@ public class Wymiary
     @Override
     public String toString()
     {
-        return szerokosc + " x " + wysokosc + " x " + grubosc + " x ";
+        return szerokosc + " x " + wysokosc + " x " + grubosc;
     }
 
-    public boolean equals(Wymiary wymiary)
+    public boolean compareTo(Wymiary wymiary)
     {
         return !((this.szerokosc != wymiary.szerokosc || this.wysokosc != wymiary.wysokosc)
                 || this.grubosc != wymiary.grubosc);
+    }
+
+    public String formatuj_do_zapisu()
+    {
+        return szerokosc + ";" + wysokosc + ";" + grubosc ;
     }
 }
