@@ -7,7 +7,7 @@ package bazadanychmagazynudrzwi_app;
 public class Klamka extends Produkt
 {
 
-    private static int ilosc_stworzonych_klamek;
+    public static int ilosc_stworzonych_klamek;
 
     private String material;
 
@@ -22,6 +22,20 @@ public class Klamka extends Produkt
         super.dane_producenta = new Dane_Producenta(dane_producenta);
 
         this.material = material;
+
+    }
+    
+    public Klamka(int id, Klamka klamka)
+    {
+        ilosc_stworzonych_klamek++;
+
+        super.typ = 2;
+        super.numer_PZ = klamka.numer_PZ;
+        super.generuj_ID(id);
+
+        super.dane_producenta = new Dane_Producenta(klamka.dane_producenta);
+
+        this.material = klamka.material;
 
     }
 
