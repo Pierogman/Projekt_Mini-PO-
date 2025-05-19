@@ -40,8 +40,8 @@ public class Dane_Producenta
                 && this.nazwa_produktu.equals(dane_producenta.nazwa_produktu);
     }
 
-    public boolean compareTo(String nazwa_producenta)
+    public boolean compare_ProducentName(Dane_Producenta dane_producenta)
     {
-        return this.nazwa_producenta.equals(nazwa_producenta);
+        return this.nazwa_producenta.equals(dane_producenta.nazwa_producenta);
     }
 }
