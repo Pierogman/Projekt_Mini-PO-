@@ -1,0 +1,211 @@
+package bazadanychmagazynudrzwi_app;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
+/**
+ *
+ * @author tymku
+ */
+public class Baza_Dokumenty_WZ
+{
+
+    private final String katalog_zapisu = "./Dane";
+    private final String lista_WZ_plik = "dok_dwz.txt";
+    private final String lista_zwolnionych_ID_plik = "lista_dwz.txt";
+    private final String ile_dok_zw_plik = "numer_dwz.txt";
+
+    public ArrayList<Dokument_WZ> lista_WZ = new ArrayList<>();
+    public ArrayList<Integer> lista_zwolnionych_ID = new ArrayList<>();
+
+    private int ile_dok_zw = 0;
+
+    public Baza_Dokumenty_WZ()
+    {
+        wczytaj_stan();
+    }
+
+    public void dodaj(Dokument_WZ dokument_wz, Boolean dodaj_ID)
+    {
+        if (dodaj_ID)
+        {
+            ile_dok_zw++;
+            int nowe_ID = ile_dok_zw + 1000;
+
+            for (int i : lista_zwolnionych_ID)
+            {
+                if (i < 2000)
+                {
+                    nowe_ID = i;
+                    lista_zwolnionych_ID.remove(i);
+                    break;
+                }
+            }
+            lista_WZ.add(new Dokument_WZ(nowe_ID, dokument_wz));
+        } else
+        {
+            lista_WZ.add(dokument_wz);
+        }
+    }
+
+    public void wypisz(String nazwa_firmy)
+    {
+        for (Dokument_WZ wz : lista_WZ)
+        {
+            if (wz.compare_adres(nazwa_firmy))
+            {
+                System.out.println(wz.toString());
+            }
+        }
+    }
+
+    public void wypisz()
+    {
+        for (Dokument_WZ wz : lista_WZ)
+        {
+            System.out.println(wz.toString());
+        }
+    }
+
+    public void usun(String nazwa_firmy)
+    {
+        for (Dokument_WZ wz : lista_WZ)
+        {
+            if (wz.compare_adres(nazwa_firmy))
+            {
+                lista_zwolnionych_ID.add(wz.usun());
+                lista_WZ.remove(wz);
+            }
+        }
+    }
+
+    public void usun(int numer_ID)
+    {
+        for (Dokument_WZ wz : lista_WZ)
+        {
+            if (wz.compareTo(numer_ID))
+            {
+                lista_zwolnionych_ID.add(wz.usun());
+                lista_WZ.remove(wz);
+            }
+        }
+    }
+
+    public void wczytaj_stan()
+    {
+        try
+        {
+            Path dwz_baza_scierzka_lista = Paths.get(katalog_zapisu, lista_WZ_plik);
+            Path dwz_baza_scierzka_ilosc = Paths.get(katalog_zapisu, ile_dok_zw_plik);
+            Path dwz_baza_scierzka_numer = Paths.get(katalog_zapisu, lista_zwolnionych_ID_plik);
+
+            if (!Files.exists(dwz_baza_scierzka_lista) || !Files.exists(dwz_baza_scierzka_ilosc) || !Files.exists(dwz_baza_scierzka_numer))
+            {
+                return;
+            }
+
+            BufferedReader reader_d = Files.newBufferedReader(dwz_baza_scierzka_lista);
+
+            String linia;
+
+            while ((linia = reader_d.readLine()) != null)
+            {
+                Dokument_WZ nowy_wz = new Dokument_WZ(linia);
+                dodaj(nowy_wz, false);
+            }
+
+            reader_d.close();
+
+            BufferedReader reader_il = Files.newBufferedReader(dwz_baza_scierzka_ilosc);
+
+            if ((linia = reader_il.readLine()) != null)
+            {
+                ile_dok_zw = Integer.parseInt(linia);
+            }
+            reader_il.close();
+
+            BufferedReader reader_nr = Files.newBufferedReader(dwz_baza_scierzka_numer);
+
+            while ((linia = reader_nr.readLine()) != null)
+            {
+                lista_zwolnionych_ID.add(Integer.parseInt(linia));
+            }
+            reader_nr.close();
+
+        } catch (Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+
+    public void zapisz_stan()
+    {
+        try
+        {
+            // Zapisywanie danych do poszcególnych plików z list(w przypadku gdy folder i pliki nie istnieją stworzenie nowych plików)
+            Path dwz_baza_scierzka_katalog = Paths.get(katalog_zapisu);
+            Path dwz_baza_scierzka_lista = Paths.get(katalog_zapisu, lista_WZ_plik);
+            Path dwz_baza_scierzka_ilosc = Paths.get(katalog_zapisu, ile_dok_zw_plik);
+            Path dwz_baza_scierzka_numer = Paths.get(katalog_zapisu, lista_zwolnionych_ID_plik);
+
+            if (!Files.exists(dwz_baza_scierzka_katalog))
+            {
+                Files.createDirectory(dwz_baza_scierzka_katalog);
+                Files.createFile(dwz_baza_scierzka_lista);
+                Files.createFile(dwz_baza_scierzka_ilosc);
+                Files.createFile(dwz_baza_scierzka_numer);
+
+            } else
+            {
+                Files.deleteIfExists(dwz_baza_scierzka_lista);
+                Files.createFile(dwz_baza_scierzka_lista);
+                Files.deleteIfExists(dwz_baza_scierzka_ilosc);
+                Files.createFile(dwz_baza_scierzka_ilosc);
+                Files.deleteIfExists(dwz_baza_scierzka_numer);
+                Files.createFile(dwz_baza_scierzka_numer);
+            }
+
+            BufferedWriter writer_ld = Files.newBufferedWriter(dwz_baza_scierzka_lista, StandardCharsets.UTF_8);
+
+            for (Dokument_WZ wz : lista_WZ)
+            {
+                writer_ld.write(wz.daneBazoweDoZapisu());
+                writer_ld.newLine();
+            }
+
+            writer_ld.close();
+
+            // Zapisywanie ilosci stworzonych wz
+            BufferedWriter writer_il = Files.newBufferedWriter(dwz_baza_scierzka_ilosc, StandardCharsets.UTF_8);
+
+            writer_il.write(String.valueOf(ile_dok_zw));
+            writer_il.close();
+
+            // Zapisywanie identyfikatorów do ponownego urzycia
+            BufferedWriter writer_ri = Files.newBufferedWriter(dwz_baza_scierzka_numer, StandardCharsets.UTF_8);
+
+            for (int i : lista_zwolnionych_ID)
+            {
+                writer_ri.write(String.valueOf(i));
+                writer_ri.newLine();
+            }
+
+            writer_ri.close();
+
+        } catch (IOException e)
+        {
+            System.err.println("Problem z zapisaniem pliku");
+            System.err.println(e);
+        } catch (SecurityException e)
+        {
+            System.err.println("Problem z dostępem");
+        }
+    }
+
+}
