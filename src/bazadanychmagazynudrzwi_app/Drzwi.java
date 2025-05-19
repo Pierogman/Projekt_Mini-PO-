@@ -8,7 +8,7 @@ package bazadanychmagazynudrzwi_app;
 public class Drzwi extends Produkt
 {
 
-    private static int ilosc_stworzonych_drzwi;
+    public static int ilosc_stworzonych_drzwi;
 
     private Wymiary wymiary;
     private String material;
@@ -28,6 +28,20 @@ public class Drzwi extends Produkt
         this.wymiary = new Wymiary(wymiary);
         this.material = material;
         this.ilosc_skrzydel = ilosc_skrzydel;
+    }
+    public Drzwi(int id, Drzwi drzwi)
+    {
+        ilosc_stworzonych_drzwi++;
+
+        super.typ = 1;
+        super.numer_PZ = numer_PZ;
+        super.generuj_ID(id);
+
+        super.dane_producenta = new Dane_Producenta(drzwi.dane_producenta);
+
+        this.wymiary = new Wymiary(drzwi.wymiary);
+        this.material = drzwi.material;
+        this.ilosc_skrzydel = drzwi.ilosc_skrzydel;
     }
 
     public Drzwi(int numer_WZ, Dane_Producenta dane_producenta, Wymiary wymiary, String material, int ilosc_skrzydel)
