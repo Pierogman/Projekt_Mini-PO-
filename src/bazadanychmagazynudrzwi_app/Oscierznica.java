@@ -7,7 +7,7 @@ package bazadanychmagazynudrzwi_app;
 public class Oscierznica extends Produkt
 {
 
-    private static int ilosc_stworzonych_oscerznic;
+    public static int ilosc_stworzonych_oscerznic;
 
     private Wymiary wymiary;
     private String material;
@@ -25,6 +25,21 @@ public class Oscierznica extends Produkt
         this.wymiary = new Wymiary(wymiary);
         this.material = material;
     }
+    
+    public Oscierznica(int id, Oscierznica oscierznica)
+    {
+        ilosc_stworzonych_oscerznic++;
+
+        super.typ = 3;
+        super.numer_PZ = oscierznica.numer_PZ;
+        super.generuj_ID(id);
+
+        super.dane_producenta = new Dane_Producenta(oscierznica.dane_producenta);
+
+        this.wymiary = new Wymiary(oscierznica.wymiary);
+        this.material = oscierznica.material;
+    }
+
 
     public Oscierznica(int numer_WZ, Dane_Producenta dane_producenta, Wymiary wymiary, String material)
     {
