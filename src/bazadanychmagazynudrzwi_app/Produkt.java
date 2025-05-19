@@ -40,9 +40,9 @@ public abstract class Produkt
         return this.numer_PZ == numer_PZ;
     }
 
-    public boolean compare_Producent(String nazwa_producenta)
+    public boolean compare_ProducentName(Dane_Producenta dane_producenta)
     {
-        return dane_producenta.compareTo(nazwa_producenta);
+        return dane_producenta.compare_ProducentName(dane_producenta);
     }
 
     public int usun()
