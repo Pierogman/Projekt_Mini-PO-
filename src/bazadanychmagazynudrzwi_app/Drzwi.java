@@ -45,6 +45,23 @@ public class Drzwi extends Produkt
         this.ilosc_skrzydel = ilosc_skrzydel;
     }
 
+    public Drzwi(String dane)
+    {
+        ilosc_stworzonych_drzwi++;
+
+        String[] osobne_dane = dane.split(";");
+        
+        super.typ = 1;
+        super.numer_PZ = 0;
+        super.generuj_ID(Integer.parseInt(osobne_dane[0]));
+        
+        super.dane_producenta = new Dane_Producenta(osobne_dane[1], osobne_dane[2]);
+        
+        this.wymiary = new Wymiary(Double.parseDouble(osobne_dane[3]),Double.parseDouble(osobne_dane[4]),Double.parseDouble(osobne_dane[5]));
+        this.material = osobne_dane[6];
+        this.ilosc_skrzydel = Integer.parseInt(osobne_dane[7]);
+    }
+
     //Metody:
     public boolean compareTo(Wymiary wymiary)
     {
