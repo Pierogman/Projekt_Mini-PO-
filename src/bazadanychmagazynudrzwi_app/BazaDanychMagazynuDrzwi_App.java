@@ -2,6 +2,7 @@ package bazadanychmagazynudrzwi_app;
 
 //To jest główna klasa tego porgramu. Z tego miejsca będą inicjowane pozostałe
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,20 +47,32 @@ public class BazaDanychMagazynuDrzwi_App
         baza_p.dodaj(klamka_2);
         baza_p.dodaj(klamka_3);
 
-        System.out.println("To sa wszystkie dodane produkty:");
+        System.out.println("To sa wszystkie dodane produkty na początku:");
         baza_p.wypisz();
 
-        System.out.println("To sa wszystkie pordukty plrducenta Dobre Dzwi");
-        baza_p.wypisz("Dobre Dzwi");
+        System.out.println("\n\nTo sa wszystkie dodane produkty na po odjęciu");
+        Path path = Paths.get("C:\\Users\\tymku\\Documents\\NetBeansProjects\\BazaDanychMagazynuDrzwi_App\\testt_usuwanie.txt");
 
-        System.out.println("To sa wszystkie produktu o wymiarach: 100 x 300 x 20");
-        baza_p.wypisz(wymiary_3);
+        try
+        {
+            baza_p.usun(path);
+        } 
+        catch (Exception e) 
+        {
+            System.err.println("Nie można znaleźć pliku");
+        }
+        baza_p.wypisz();
+
+//        System.out.println("To sa wszystkie pordukty plrducenta Dobre Dzwi");
+//
+//        System.out.println("To sa wszystkie produktu o wymiarach: 100 x 300 x 20");
+//        baza_p.wypisz(wymiary_3);
 
         baza_p.zapisz_stan();
+        
+        Generator_CSV gen = new Generator_CSV();
+        gen.generuj(baza_p, "C:\\Users\\tymku\\Documents\\NetBeansProjects\\BazaDanychMagazynuDrzwi_App\\testt_usuwanie.txt");
 
-        Path path = Paths.get(".test.txt");
-
-       
     }
 
 }
