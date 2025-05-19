@@ -58,7 +58,6 @@ public class Generator_CSV extends Baza_Produkty
 
             for (String produkt : wybrane_produkty)
             {
-                System.out.println(produkt);
                 writer_ld.write(produkt);
                 writer_ld.newLine();
             }
