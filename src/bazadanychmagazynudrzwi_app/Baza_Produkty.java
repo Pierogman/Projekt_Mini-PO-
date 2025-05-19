@@ -19,6 +19,12 @@ public class Baza_Produkty
 
     private final String katalog_zapisu = "./Dane";
     private final String dane_lista_p = "lista_p.txt";
+    private final String dane_ilosc_produktow = "ilosc_p.txt";
+    private final String dane_numery_ID = "numer_p.txt";
+
+    private int ile_oscierznic = 0;
+    private int ile_klamki = 0;
+    private int ile_drzwi = 0;
 
     private final String table_format = "%d|%d|%-30s|%-23s|%-10s|%-2s|";
     private final String save_format = "%d;%d;%s;%s;%s;%s";
@@ -48,36 +54,87 @@ public class Baza_Produkty
             if (typ == 1)
             {
                 Drzwi nowe_drzwi = new Drzwi(linia, dodaj_ID);
-                dodaj(nowe_drzwi);
+                dodaj(nowe_drzwi, dodaj_ID);
             }
             if (typ == 2)
             {
                 Klamka nowa_klamka = new Klamka(linia, dodaj_ID);
-                dodaj(nowa_klamka);
+                dodaj(nowa_klamka, dodaj_ID);
             }
             if (typ == 3)
             {
                 Oscierznica nowa_oscierznica = new Oscierznica(linia, dodaj_ID);
-                dodaj(nowa_oscierznica);
+                dodaj(nowa_oscierznica, dodaj_ID);
             }
         }
         reader_d.close();
     }
 
     // Funkcje dodające poszczegulne elementy z osobna
-    public void dodaj(Drzwi drzwi)
+    public void dodaj(Drzwi drzwi, Boolean dodaj_ID)
     {
-        lista_drzwi.add(drzwi);
+        if (dodaj_ID)
+        {
+            ile_drzwi++;
+            int nowe_ID = ile_drzwi + 1 * 10000;
+
+            for (int i : lista_urzytych_ID)
+            {
+                if (100000 <= i && i < 20000)
+                {
+                    nowe_ID = i;
+                }
+            }
+            lista_drzwi.add(new Drzwi(nowe_ID, drzwi));
+
+        } else
+        {
+            lista_drzwi.add(drzwi);
+        }
     }
 
-    public void dodaj(Klamka klamka)
+    public void dodaj(Klamka klamka, Boolean dodaj_ID)
     {
-        lista_klamek.add(klamka);
+        if (dodaj_ID)
+        {
+            ile_klamki++;
+            int nowe_ID = ile_klamki + 2 * 10000;
+
+            for (int i : lista_urzytych_ID)
+            {
+                if (20000 <= i && i < 30000)
+                {
+                    nowe_ID = i;
+                }
+            }
+            lista_klamek.add(new Klamka(nowe_ID, klamka));
+
+        } else
+        {
+            lista_klamek.add(klamka);
+        }
     }
 
-    public void dodaj(Oscierznica oscierznica)
+    public void dodaj(Oscierznica oscierznica, Boolean dodaj_ID)
     {
-        lista_oscierznic.add(oscierznica);
+        if (dodaj_ID)
+        {
+            ile_oscierznic++;
+            int nowe_ID = ile_oscierznic + 3 * 10000;
+
+            for (int i : lista_urzytych_ID)
+            {
+                if (i >= 30000)
+                {
+                    nowe_ID = i;
+                }
+            }
+            lista_oscierznic.add(new Oscierznica(nowe_ID, oscierznica));
+
+        } else
+        {
+            lista_oscierznic.add(oscierznica);
+        }
     }
 
     // Funkcje usuwające =======================================================
@@ -363,10 +420,39 @@ public class Baza_Produkty
     {
         try
         {
-            // Odczytywanie danych z poszczególnych plików do list 
             Path p_baza_scierzka_ld = Paths.get(katalog_zapisu, dane_lista_p);
+            Path p_baza_scierzka_ilosc = Paths.get(katalog_zapisu, dane_ilosc_produktow);
+            Path p_baza_scierzka_numer = Paths.get(katalog_zapisu, dane_numery_ID);
+
+            if (!Files.exists(p_baza_scierzka_ld) || 
+                    !Files.exists(p_baza_scierzka_ilosc) || !Files.exists(p_baza_scierzka_numer))
+            {
+                return;
+            }
+
+            // Odczytywanie danych z poszczególnych plików do list 
             dodaj(p_baza_scierzka_ld, false);
-            
+
+            // Odczytywanie danych o ilosci produktow
+            BufferedReader reader_il = Files.newBufferedReader(p_baza_scierzka_ilosc);
+
+            String line;
+            if ((line = reader_il.readLine()) != null)
+            {
+                ile_drzwi = Integer.parseInt(line);
+            }
+            ile_klamki = Integer.parseInt(reader_il.readLine());
+            ile_oscierznic = Integer.parseInt(reader_il.readLine());
+            reader_il.close();
+
+            // Odczytywanie danych o wolnych numerach id
+            BufferedReader reader_re = Files.newBufferedReader(p_baza_scierzka_numer);
+            while ((line = reader_re.readLine()) != null)
+            {
+                lista_urzytych_ID.add(Integer.parseInt(line));
+            }
+            reader_re.close();
+
         } catch (Exception e)
         {
             System.err.println("Nie znalezieono scierzki");
@@ -381,29 +467,62 @@ public class Baza_Produkty
             // Zapisywanie danych do poszcególnych plików z list(w przypadku gdy folder i pliki nie istnieją stworzenie nowych plików)
             Path p_baza_scierzka = Paths.get(katalog_zapisu);
             Path p_baza_scierzka_list = Paths.get(katalog_zapisu, dane_lista_p);
+            Path p_baza_scierzka_ilosc = Paths.get(katalog_zapisu, dane_ilosc_produktow);
+            Path p_baza_scierzka_numer = Paths.get(katalog_zapisu, dane_numery_ID);
 
             if (!Files.exists(p_baza_scierzka))
             {
                 Files.createDirectory(p_baza_scierzka);
                 Files.createFile(p_baza_scierzka_list);
+                Files.createFile(p_baza_scierzka_ilosc);
+                Files.createFile(p_baza_scierzka_numer);
 
             } else
             {
                 Files.deleteIfExists(p_baza_scierzka_list);
                 Files.createFile(p_baza_scierzka_list);
+
+                Files.deleteIfExists(p_baza_scierzka_ilosc);
+                Files.createFile(p_baza_scierzka_ilosc);
+
+                Files.deleteIfExists(p_baza_scierzka_numer);
+                Files.createFile(p_baza_scierzka_numer);
             }
 
+            // Zapisywanie poszeczegolnych pordoktow
             ArrayList<String> zapisywane_produkty = generuj_subliste(save_format);
 
-            BufferedWriter writer_ld = Files.newBufferedWriter(p_baza_scierzka_list, StandardCharsets.UTF_8);
+            BufferedWriter writer_lp = Files.newBufferedWriter(p_baza_scierzka_list, StandardCharsets.UTF_8);
 
             for (String produkt : zapisywane_produkty)
             {
-                writer_ld.write(produkt);
-                writer_ld.newLine();
+                writer_lp.write(produkt);
+                writer_lp.newLine();
             }
 
-            writer_ld.close();
+            writer_lp.close();
+
+            // Zapisywanie ilosci stworzonych produktow 
+            BufferedWriter writer_il = Files.newBufferedWriter(p_baza_scierzka_ilosc, StandardCharsets.UTF_8);
+
+            writer_il.write(String.valueOf(ile_drzwi));
+            writer_il.newLine();
+            writer_il.write(String.valueOf(ile_klamki));
+            writer_il.newLine();
+            writer_il.write(String.valueOf(ile_oscierznic));
+
+            writer_il.close();
+
+            // Zapisywanie identyfikatorów do ponownego urzycia
+            BufferedWriter writer_ri = Files.newBufferedWriter(p_baza_scierzka_numer, StandardCharsets.UTF_8);
+
+            for (int i : lista_urzytych_ID)
+            {
+                writer_ri.write(String.valueOf(i));
+                writer_ri.newLine();
+            }
+
+            writer_ri.close();
 
         } catch (IOException e)
         {
