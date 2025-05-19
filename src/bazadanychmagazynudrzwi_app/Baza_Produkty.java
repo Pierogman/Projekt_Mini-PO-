@@ -1,6 +1,10 @@
 package bazadanychmagazynudrzwi_app;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +22,7 @@ public class Baza_Produkty
     private final String dane_lista_d = "drzwi.txt";
     private final String dane_lista_k = "klamki.txt";
     private final String dane_lista_o = "oscerznice.txt";
+
     private final String table_format = "%d|%-30s|%-23s|%-10s|%-2s|";
 
     public ArrayList<Integer> lista_urzytych_ID = new ArrayList<>();
@@ -189,18 +194,20 @@ public class Baza_Produkty
         try
         {
             Path p_baza_scierzka = Paths.get(katalog_zapisu);
-            if (!Files.exists(p_baza_scierzka))
+            Path p_baza_scierzka_ld = Paths.get(katalog_zapisu, dane_lista_d);
+            Path p_baza_scierzka_lk = Paths.get(katalog_zapisu, dane_lista_k);
+            Path p_baza_scierzka_lo = Paths.get(katalog_zapisu, dane_lista_o);
+
+            BufferedReader reader_ld = Files.newBufferedReader(p_baza_scierzka_ld);
+
+            while (reader_ld.readLine() != null)
             {
-                Files.createDirectory(p_baza_scierzka);
-                Path p_baza_scierzka_ld = Paths.get(katalog_zapisu, dane_lista_d);
-                Path p_baza_scierzka_lk = Paths.get(katalog_zapisu, dane_lista_k);
-                Path p_baza_scierzka_lo = Paths.get(katalog_zapisu, dane_lista_o);
-
-                Files.createFile(p_baza_scierzka_ld);
-                Files.createFile(p_baza_scierzka_lk);
-                Files.createFile(p_baza_scierzka_lo);
-
+                Drzwi nowe_drzwi = new Drzwi(reader_ld.readLine());
+                dodaj(nowe_drzwi);
             }
+            
+            
+            reader_ld.close();
 
         } catch (Exception e)
         {
@@ -211,6 +218,60 @@ public class Baza_Produkty
 
     public void zapisz_stan()
     {
+        try
+        {
+            Path p_baza_scierzka = Paths.get(katalog_zapisu);
+            Path p_baza_scierzka_ld = Paths.get(katalog_zapisu, dane_lista_d);
+            Path p_baza_scierzka_lk = Paths.get(katalog_zapisu, dane_lista_k);
+            Path p_baza_scierzka_lo = Paths.get(katalog_zapisu, dane_lista_o);
+
+            if (!Files.exists(p_baza_scierzka))
+            {
+                Files.createDirectory(p_baza_scierzka);
+
+                Files.createFile(p_baza_scierzka_ld);
+                Files.createFile(p_baza_scierzka_lk);
+                Files.createFile(p_baza_scierzka_lo);
+
+                System.out.println("Zapisywane dane");
+
+            }
+
+            BufferedWriter writer_ld = Files.newBufferedWriter(p_baza_scierzka_ld, StandardCharsets.UTF_8);
+
+            for (Drzwi d : lista_drzwi)
+            {
+                writer_ld.write(d.toString());
+                writer_ld.newLine();
+            }
+            writer_ld.close();
+
+            BufferedWriter writer_lk = Files.newBufferedWriter(p_baza_scierzka_lk, StandardCharsets.UTF_8);
+
+            for (Klamka k : lista_klamek)
+            {
+                writer_lk.write(k.toString());
+                writer_lk.newLine();
+            }
+            writer_lk.close();
+
+            BufferedWriter writer_lo = Files.newBufferedWriter(p_baza_scierzka_lo, StandardCharsets.UTF_8);
+
+            for (Oscierznica o : lista_oscierznic)
+            {
+                writer_lo.write(o.toString());
+                writer_lo.newLine();
+            }
+            writer_lo.close();
+
+        } catch (IOException e)
+        {
+            System.err.println("Problem z zapisaniem pliku");
+        } catch (SecurityException e)
+        {
+            System.err.println("Problem z dostępem");
+        }
+
     }
 
 }
