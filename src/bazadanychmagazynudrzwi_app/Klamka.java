@@ -39,18 +39,38 @@ public class Klamka extends Produkt
 
     }
 
-    //Metody 
-    public String toFormatedString(String format)
+    public Klamka(String dane, Boolean dodaj_ID)
     {
-       return String.format(format, super.numer_ID, super.dane_producenta.toString()," ", material, " ");
+
+        String[] osobne_dane = dane.split(";");
+
+        if (!dodaj_ID)
+        {
+            super.generuj_ID(Integer.parseInt(osobne_dane[0]));
+        } else
+        {
+            ilosc_stworzonych_klamek++;
+            super.generuj_ID(typ, ilosc_stworzonych_klamek - 1);
+        }
+
+        super.typ = 1;
+        super.numer_PZ = Integer.parseInt(osobne_dane[1]);
+        super.dane_producenta = new Dane_Producenta(osobne_dane[2], osobne_dane[3]);
+
+        this.material = osobne_dane[7];
     }
 
-    @Override
-    public String toString()
+    //Metody 
+    public Boolean compareTo(Klamka klamka)
     {
-        return super.numer_ID + ";" + super.dane_producenta.formatuj_do_zapisu() + ";"
-                + " " + ";" + material + ";" + " ";
-
+        return this.material.equals(klamka.material) && this.dane_producenta.compareTo(klamka.dane_producenta);
+    }
+    
+    public String toFormatedString(String format)
+    {
+        return String.format(format,
+                super.numer_ID, super.numer_PZ, super.dane_producenta.formatuj_do_zapisu()
+                , " ; ; ", material, " "); 
     }
 
 }
