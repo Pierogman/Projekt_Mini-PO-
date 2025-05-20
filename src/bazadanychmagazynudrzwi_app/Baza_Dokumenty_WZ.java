@@ -96,6 +96,18 @@ public class Baza_Dokumenty_WZ
             }
         }
     }
+    
+    public Dokument_WZ zwroc(int numer_ID)
+    {
+        for (Dokument_WZ wz: lista_WZ)
+        {
+            if (wz.compareTo(numer_ID))
+            {
+                return wz;
+            }
+        }
+        return null;
+    }
 
     public void wczytaj_stan()
     {
