@@ -60,7 +60,7 @@ public abstract class Dokument
 
     public boolean compareTo(int numer_ID)
     {
-        return this.numer_ID  == numer_ID;
+        return this.numer_ID == numer_ID;
     }
 
     // Usuwanie zawartości dokumentu (czyści dane i zwraca ID do ewentualnego ponownego użycia)
