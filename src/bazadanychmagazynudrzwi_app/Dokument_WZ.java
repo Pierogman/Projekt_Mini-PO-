@@ -14,7 +14,7 @@ public class Dokument_WZ extends Dokument
     {
         super(id, 1, p, firma, sciezka);
     }
-    
+
     public Dokument_WZ(int id, Dokument_WZ dokument_wz)
     {
         super(id, 1, dokument_wz.pracownik, dokument_wz.nazwa_firmy, dokument_wz.sciezka_dokumentu);
