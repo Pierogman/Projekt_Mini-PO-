@@ -20,7 +20,7 @@ public class Baza_Dokumenty_PZ
     private final String katalog_zapisu = "./Dane";
     private final String lista_PZ_plik = "dok_dpz.txt";
     private final String lista_zwolnionych_ID_plik = "lista_dpz.txt";
-    private final String ile_dok_pw_plik = "numer_dpz.txt";
+    private final String ile_dok_pz_plik = "numer_dpz.txt";
 
     public ArrayList<Dokument_PZ> lista_PZ = new ArrayList<>();
     public ArrayList<Integer> lista_zwolnionych_ID = new ArrayList<>();
@@ -108,13 +108,25 @@ public class Baza_Dokumenty_PZ
             }
         }
     }
+    
+    public Dokument_PZ zwroc(int numer_ID)
+    {
+        for (Dokument_PZ pz: lista_PZ)
+        {
+            if (pz.compareTo(numer_ID))
+            {
+                return pz;
+            }
+        }
+        return null;
+    }
 
     public void wczytaj_stan()
     {
         try
         {
             Path dpz_baza_scierzka_lista = Paths.get(katalog_zapisu, lista_PZ_plik);
-            Path dpz_baza_scierzka_ilosc = Paths.get(katalog_zapisu, ile_dok_pw_plik);
+            Path dpz_baza_scierzka_ilosc = Paths.get(katalog_zapisu, ile_dok_pz_plik);
             Path dpz_baza_scierzka_numer = Paths.get(katalog_zapisu, lista_zwolnionych_ID_plik);
 
             if (!Files.exists(dpz_baza_scierzka_lista) || !Files.exists(dpz_baza_scierzka_ilosc) || !Files.exists(dpz_baza_scierzka_numer))
@@ -163,7 +175,7 @@ public class Baza_Dokumenty_PZ
             // Zapisywanie danych do poszcególnych plików z list(w przypadku gdy folder i pliki nie istnieją stworzenie nowych plików)
             Path dwz_baza_scierzka_katalog = Paths.get(katalog_zapisu);
             Path dwz_baza_scierzka_lista = Paths.get(katalog_zapisu, lista_PZ_plik);
-            Path dwz_baza_scierzka_ilosc = Paths.get(katalog_zapisu, ile_dok_pw_plik);
+            Path dwz_baza_scierzka_ilosc = Paths.get(katalog_zapisu, ile_dok_pz_plik);
             Path dwz_baza_scierzka_numer = Paths.get(katalog_zapisu, lista_zwolnionych_ID_plik);
 
             if (!Files.exists(dwz_baza_scierzka_katalog))
@@ -187,7 +199,7 @@ public class Baza_Dokumenty_PZ
 
             for (Dokument_PZ pz : lista_PZ)
             {
-                writer_ld.write(pz.daneBazoweDoZapisu());
+                writer_ld.write(pz.formatuj_do_zapisu());
                 writer_ld.newLine();
             }
 
@@ -216,7 +228,7 @@ public class Baza_Dokumenty_PZ
             System.err.println(e);
         } catch (SecurityException e)
         {
-            System.err.println("Problem z dostępem");
+            System.err.println("Problem z dostepem");
         }
     }
 
