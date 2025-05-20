@@ -42,7 +42,28 @@ public class Baza_Produkty
 
     // Funkcje doające =========================================================
     // Funkcja dodająca wszystkie elementy z danego dokumentu
-    public void dodaj(Path scierzka_dokumentu, Boolean dodaj_ID) throws IOException
+    public void dodaj(Dokument_PZ dokument_pz)
+    {
+        Path dokument_pz_path = Paths.get(dokument_pz.sciezka_dokumentu);
+        System.out.println("Podany dokument to: " + dokument_pz.toString());
+
+        if (!Files.exists(dokument_pz_path))
+        {
+            System.err.println("Bledna scierzka dokumentu lub jego format!");
+            return;
+        }
+
+        try
+        {
+            dodaj(dokument_pz_path, true);
+        } catch (IOException e)
+        {
+            System.err.println("Blad formatu (w pliku mgoa znajdowac sie polskie znaki)");
+        }
+
+    }
+
+    private void dodaj(Path scierzka_dokumentu, Boolean dodaj_ID) throws IOException
     {
         BufferedReader reader_d = Files.newBufferedReader(scierzka_dokumentu);
 
@@ -50,18 +71,18 @@ public class Baza_Produkty
 
         while ((linia = reader_d.readLine()) != null)
         {
-            int typ = linia.charAt(0) - '0';
-            if (typ == 1)
+            char typ = linia.charAt(0);
+            if (typ == '1')
             {
                 Drzwi nowe_drzwi = new Drzwi(linia, dodaj_ID);
                 dodaj(nowe_drzwi, dodaj_ID);
             }
-            if (typ == 2)
+            if (typ == '2')
             {
                 Klamka nowa_klamka = new Klamka(linia, dodaj_ID);
                 dodaj(nowa_klamka, dodaj_ID);
             }
-            if (typ == 3)
+            if (typ == '3')
             {
                 Oscierznica nowa_oscierznica = new Oscierznica(linia, dodaj_ID);
                 dodaj(nowa_oscierznica, dodaj_ID);
@@ -71,7 +92,7 @@ public class Baza_Produkty
     }
 
     // Funkcje dodające poszczegulne elementy z osobna
-    public void dodaj(Drzwi drzwi, Boolean dodaj_ID)
+    private void dodaj(Drzwi drzwi, Boolean dodaj_ID)
     {
         if (dodaj_ID)
         {
@@ -93,7 +114,7 @@ public class Baza_Produkty
         }
     }
 
-    public void dodaj(Klamka klamka, Boolean dodaj_ID)
+    private void dodaj(Klamka klamka, Boolean dodaj_ID)
     {
         if (dodaj_ID)
         {
@@ -115,7 +136,7 @@ public class Baza_Produkty
         }
     }
 
-    public void dodaj(Oscierznica oscierznica, Boolean dodaj_ID)
+    private void dodaj(Oscierznica oscierznica, Boolean dodaj_ID)
     {
         if (dodaj_ID)
         {
@@ -138,7 +159,27 @@ public class Baza_Produkty
     }
 
     // Funkcje usuwające =======================================================
-    public void usun(Path scierzka_dokumentu) throws IOException
+    public void usun(Dokument_WZ dokument_wz)
+    {
+        Path dokument_wz_path = Paths.get(dokument_wz.sciezka_dokumentu);
+
+        if (!Files.exists(dokument_wz_path))
+        {
+            System.err.println("Bledna scierzka dokumentu lub jego format!");
+            return;
+        }
+
+        try
+        {
+            usun(dokument_wz_path);
+        } catch (IOException e)
+        {
+            System.err.println(e);
+        }
+
+    }
+
+    private void usun(Path scierzka_dokumentu) throws IOException
     {
         BufferedReader reader_d = Files.newBufferedReader(scierzka_dokumentu);
 
@@ -257,22 +298,28 @@ public class Baza_Produkty
         }
     }
 
-    public void usun(Drzwi drzwi)
+    private void usun(Drzwi drzwi)
     {
         lista_urzytych_ID.add(drzwi.usun());
-        lista_drzwi.remove(drzwi);
+        lista_urzytych_ID.add(1);
+        System.out.print("Usunieto drzwi");
     }
 
-    public void usun(Klamka klamka)
+    private void usun(Klamka klamka)
     {
         lista_urzytych_ID.add(klamka.usun());
         lista_klamek.remove(klamka);
+        lista_urzytych_ID.add(1);
+        System.out.print("Usunieto drzwi");
     }
 
-    public void usun(Oscierznica oscierznica)
+    private void usun(Oscierznica oscierznica)
     {
         lista_urzytych_ID.add(oscierznica.usun());
         lista_oscierznic.remove(oscierznica);
+        lista_urzytych_ID.add(1);
+        System.out.print("Usunieto drzwi");
+
     }
 
     // Funkcje wypisujące=======================================================
@@ -424,8 +471,8 @@ public class Baza_Produkty
             Path p_baza_scierzka_ilosc = Paths.get(katalog_zapisu, dane_ilosc_produktow);
             Path p_baza_scierzka_numer = Paths.get(katalog_zapisu, dane_numery_ID);
 
-            if (!Files.exists(p_baza_scierzka_ld) || 
-                    !Files.exists(p_baza_scierzka_ilosc) || !Files.exists(p_baza_scierzka_numer))
+            if (!Files.exists(p_baza_scierzka_ld)
+                    || !Files.exists(p_baza_scierzka_ilosc) || !Files.exists(p_baza_scierzka_numer))
             {
                 return;
             }
