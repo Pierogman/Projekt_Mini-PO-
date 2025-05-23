@@ -24,7 +24,7 @@ public class Klamka extends Produkt
         this.material = material;
 
     }
-    
+
     public Klamka(int id, Klamka klamka)
     {
         ilosc_stworzonych_klamek++;
@@ -53,25 +53,42 @@ public class Klamka extends Produkt
 
     }
 
-    public Klamka(String dane, Boolean dodaj_ID)
+    public Klamka(String dane, Boolean dodaj_ID, int numer_PZ)
     {
-
-        String[] osobne_dane = dane.split(";");
-
-        if (!dodaj_ID)
+        try
         {
-            super.generuj_ID(Integer.parseInt(osobne_dane[0]));
-        } else
+
+            String[] osobne_dane = dane.split(";");
+
+            if (!dodaj_ID)
+            {
+                super.generuj_ID(Integer.parseInt(osobne_dane[0]));
+            } else
+            {
+                ilosc_stworzonych_klamek++;
+                super.generuj_ID(typ, ilosc_stworzonych_klamek - 1);
+            }
+
+            if (numer_PZ == 0)
+            {
+                super.numer_PZ = Integer.parseInt(osobne_dane[1]);
+            } else
+            {
+                super.numer_PZ = numer_PZ;
+            }
+            super.typ = 1;
+            super.dane_producenta = new Dane_Producenta(osobne_dane[2], osobne_dane[3]);
+
+            this.material = osobne_dane[7];
+
+        } catch (Exception e)
         {
-            ilosc_stworzonych_klamek++;
-            super.generuj_ID(typ, ilosc_stworzonych_klamek - 1);
+            System.err.println("Blendny format produktu: ");
+            System.out.println(dane);
+
+            throw e;
         }
 
-        super.typ = 1;
-        super.numer_PZ = Integer.parseInt(osobne_dane[1]);
-        super.dane_producenta = new Dane_Producenta(osobne_dane[2], osobne_dane[3]);
-
-        this.material = osobne_dane[7];
     }
 
     //Metody 
@@ -79,12 +96,12 @@ public class Klamka extends Produkt
     {
         return this.material.equals(klamka.material) && this.dane_producenta.compareTo(klamka.dane_producenta);
     }
-    
+
     public String toFormatedString(String format)
     {
         return String.format(format,
-                super.numer_ID, super.numer_PZ, super.dane_producenta.formatuj_do_zapisu()
-                , " ; ; ", material, " "); 
+                super.numer_ID, super.numer_PZ, super.dane_producenta.formatuj_do_zapisu(),
+                " ; ; ", material, " ");
     }
 
 }

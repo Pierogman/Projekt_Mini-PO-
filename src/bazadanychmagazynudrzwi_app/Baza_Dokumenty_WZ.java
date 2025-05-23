@@ -17,9 +17,9 @@ public class Baza_Dokumenty_WZ
 {
 
     private final String katalog_zapisu = "./Dane";
-    private final String lista_WZ_plik = "dok_dwz.txt";
-    private final String lista_zwolnionych_ID_plik = "lista_dwz.txt";
-    private final String ile_dok_zw_plik = "numer_dwz.txt";
+    private final String lista_WZ_plik = "lista_wz.txt";
+    private final String lista_zwolnionych_ID_plik = "wolne_ID_wz.txt";
+    private final String ile_dok_zw_plik = "ilosc_wz.txt";
 
     public ArrayList<Dokument_WZ> lista_WZ = new ArrayList<>();
     public ArrayList<Integer> lista_zwolnionych_ID = new ArrayList<>();
@@ -36,17 +36,15 @@ public class Baza_Dokumenty_WZ
         if (dodaj_ID)
         {
             ile_dok_zw++;
-            int nowe_ID = ile_dok_zw + 1000;
-
-            for (int i : lista_zwolnionych_ID)
+            int nowe_ID = ile_dok_zw + 2000;
+            
+            if(!lista_zwolnionych_ID.isEmpty())
             {
-                if (i < 2000)
-                {
-                    nowe_ID = i;
-                    lista_zwolnionych_ID.remove(i);
-                    break;
-                }
+                nowe_ID = lista_zwolnionych_ID.getLast();
+                lista_zwolnionych_ID.removeLast();
+                ile_dok_zw --;
             }
+            
             lista_WZ.add(new Dokument_WZ(nowe_ID, dokument_wz));
         } else
         {
@@ -58,7 +56,7 @@ public class Baza_Dokumenty_WZ
     {
         for (Dokument_WZ wz : lista_WZ)
         {
-            if (wz.compare_adres(nazwa_firmy))
+            if (wz.compare_name(nazwa_firmy))
             {
                 System.out.println(wz.toString());
             }
@@ -77,10 +75,11 @@ public class Baza_Dokumenty_WZ
     {
         for (Dokument_WZ wz : lista_WZ)
         {
-            if (wz.compare_adres(nazwa_firmy))
+            if (wz.compare_name(nazwa_firmy))
             {
                 lista_zwolnionych_ID.add(wz.usun());
                 lista_WZ.remove(wz);
+                break;
             }
         }
     }
@@ -93,6 +92,7 @@ public class Baza_Dokumenty_WZ
             {
                 lista_zwolnionych_ID.add(wz.usun());
                 lista_WZ.remove(wz);
+                break;
             }
         }
     }

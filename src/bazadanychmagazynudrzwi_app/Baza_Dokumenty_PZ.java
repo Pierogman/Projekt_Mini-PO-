@@ -1,4 +1,3 @@
-
 package bazadanychmagazynudrzwi_app;
 
 import java.io.BufferedReader;
@@ -18,9 +17,9 @@ public class Baza_Dokumenty_PZ
 {
 
     private final String katalog_zapisu = "./Dane";
-    private final String lista_PZ_plik = "dok_dpz.txt";
-    private final String lista_zwolnionych_ID_plik = "lista_dpz.txt";
-    private final String ile_dok_pz_plik = "numer_dpz.txt";
+    private final String lista_PZ_plik = "lista_pz.txt";
+    private final String lista_zwolnionych_ID_plik = "wolne_ID_pz.txt";
+    private final String ile_dok_pz_plik = "ilosc_pz.txt";
 
     public ArrayList<Dokument_PZ> lista_PZ = new ArrayList<>();
     public ArrayList<Integer> lista_zwolnionych_ID = new ArrayList<>();
@@ -39,14 +38,12 @@ public class Baza_Dokumenty_PZ
             ile_dok_pz++;
             int nowe_ID = ile_dok_pz + 1000;
 
-            for (int i : lista_zwolnionych_ID)
+            if (!lista_zwolnionych_ID.isEmpty())
             {
-                if (i < 2000)
-                {
-                    nowe_ID = i;
-                    lista_zwolnionych_ID.remove(i);
-                    break;
-                }
+                nowe_ID = lista_zwolnionych_ID.getLast();
+                lista_zwolnionych_ID.removeLast();
+                ile_dok_pz--;
+
             }
             lista_PZ.add(new Dokument_PZ(nowe_ID, dokument_pz));
         } else
@@ -93,6 +90,7 @@ public class Baza_Dokumenty_PZ
             {
                 lista_zwolnionych_ID.add(pz.usun());
                 lista_PZ.remove(pz);
+                break;
             }
         }
     }
@@ -105,13 +103,14 @@ public class Baza_Dokumenty_PZ
             {
                 lista_zwolnionych_ID.add(pz.usun());
                 lista_PZ.remove(pz);
+                break;
             }
         }
     }
-    
+
     public Dokument_PZ zwroc(int numer_ID)
     {
-        for (Dokument_PZ pz: lista_PZ)
+        for (Dokument_PZ pz : lista_PZ)
         {
             if (pz.compareTo(numer_ID))
             {

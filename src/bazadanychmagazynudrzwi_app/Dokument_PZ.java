@@ -56,9 +56,5 @@ public class Dokument_PZ extends Dokument
         return this.adres_firmy.equalsIgnoreCase(adres);
     }
 
-    public boolean compare_name(String adres)
-    {
-        return this.adres_firmy.equalsIgnoreCase(adres);
-    }
-
+    
 }

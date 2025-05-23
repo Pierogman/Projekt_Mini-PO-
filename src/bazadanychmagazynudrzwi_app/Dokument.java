@@ -7,7 +7,7 @@ package bazadanychmagazynudrzwi_app;
 public abstract class Dokument
 {
 
-    private int numer_ID;
+    public int numer_ID;
     private final int typ; // 1 - WZ, 2 - PZ
     protected Pracownik pracownik;
     protected String sciezka_dokumentu;
@@ -53,7 +53,7 @@ public abstract class Dokument
     }
 
     // Porównanie nazw firm
-    public boolean compare_adres(String firma)
+    public boolean compare_name(String firma)
     {
         return this.nazwa_firmy.equalsIgnoreCase(firma);
     }
@@ -67,9 +67,9 @@ public abstract class Dokument
     public int usun()
     {
         int temp = this.numer_ID;
-        this.pracownik = null;
-        this.nazwa_firmy = null;
-        this.sciezka_dokumentu = null;
+//        this.pracownik = null;
+//        this.nazwa_firmy = null;
+//        this.sciezka_dokumentu = null;
         return temp;
     }
 

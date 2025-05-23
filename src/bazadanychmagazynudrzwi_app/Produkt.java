@@ -48,8 +48,7 @@ public abstract class Produkt
     public int usun()
     {
         int urzywane_id = this.numer_ID;
-        numer_ID = 0;
-        numer_PZ = 0;
+        this.numer_PZ = 0;
 
         return urzywane_id;
     }
