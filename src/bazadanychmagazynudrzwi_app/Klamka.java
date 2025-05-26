@@ -1,22 +1,19 @@
 package bazadanychmagazynudrzwi_app;
 
-/**
- *
- * @author tymku
- */
+
 public class Klamka extends Produkt
 {
 
-    public static int ilosc_stworzonych_klamek;
+    private static int ilosc_stworzonych_klamek;
 
     private String material;
 
-    public Klamka(int id, int numer_WZ, Dane_Producenta dane_producenta, String material)
+    public Klamka(int id, int numer_PZ, Dane_Producenta dane_producenta, String material)
     {
         ilosc_stworzonych_klamek++;
 
         super.typ = 2;
-        super.numer_PZ = numer_WZ;
+        super.numer_PZ = numer_PZ;
         super.generuj_ID(id);
 
         super.dane_producenta = new Dane_Producenta(dane_producenta);
@@ -39,12 +36,12 @@ public class Klamka extends Produkt
 
     }
 
-    public Klamka(int numer_WZ, Dane_Producenta dane_producenta, String material)
+    public Klamka(int numer_PZ, Dane_Producenta dane_producenta, String material)
     {
         ilosc_stworzonych_klamek++;
 
         super.typ = 2;
-        super.numer_PZ = numer_WZ;
+        super.numer_PZ = numer_PZ;
         super.generuj_ID(typ, ilosc_stworzonych_klamek - 1);
 
         super.dane_producenta = new Dane_Producenta(dane_producenta);
@@ -92,7 +89,7 @@ public class Klamka extends Produkt
     }
 
     //Metody 
-    public Boolean compareTo(Klamka klamka)
+    public Boolean compare(Klamka klamka)
     {
         return this.material.equals(klamka.material) && this.dane_producenta.compareTo(klamka.dane_producenta);
     }

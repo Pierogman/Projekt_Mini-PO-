@@ -8,7 +8,7 @@ package bazadanychmagazynudrzwi_app;
 public class Drzwi extends Produkt
 {
 
-    public static int ilosc_stworzonych_drzwi;
+    private static int ilosc_stworzonych_drzwi;
 
     private final Wymiary wymiary;
     private final String material;
@@ -101,12 +101,12 @@ public class Drzwi extends Produkt
     }
 
     //Metody:
-    public boolean compareTo(Wymiary wymiary)
+    public boolean compare(Wymiary wymiary)
     {
         return this.wymiary.compareTo(wymiary);
     }
 
-    public boolean compareTo(Drzwi drzwi)
+    public boolean compare(Drzwi drzwi)
     {
         return this.dane_producenta.compareTo(drzwi.dane_producenta)
                 && this.wymiary.compareTo(drzwi.wymiary)

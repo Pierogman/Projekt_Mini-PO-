@@ -25,7 +25,7 @@ public abstract class Produkt
         this.numer_ID = id;
     }
 
-    public boolean compareTo(Dane_Producenta dane_producenta)
+    public boolean compare(Dane_Producenta dane_producenta)
     {
         return this.dane_producenta.compareTo(dane_producenta);
     }
@@ -42,7 +42,7 @@ public abstract class Produkt
 
     public boolean compare_ProducentName(Dane_Producenta dane_producenta)
     {
-        return dane_producenta.compare_ProducentName(dane_producenta);
+        return this.dane_producenta.compare_ProducentName(dane_producenta);
     }
 
     public int usun()
@@ -52,4 +52,5 @@ public abstract class Produkt
 
         return urzywane_id;
     }
+    
 }

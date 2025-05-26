@@ -7,17 +7,17 @@ package bazadanychmagazynudrzwi_app;
 public class Oscierznica extends Produkt
 {
 
-    public static int ilosc_stworzonych_oscerznic;
+    private static int ilosc_stworzonych_oscerznic;
 
     private Wymiary wymiary;
     private String material;
 
-    public Oscierznica(int id, int numer_WZ, Dane_Producenta dane_producenta, Wymiary wymiary, String material)
+    public Oscierznica(int id, int numer_PZ, Dane_Producenta dane_producenta, Wymiary wymiary, String material)
     {
         ilosc_stworzonych_oscerznic++;
 
         super.typ = 3;
-        super.numer_PZ = numer_WZ;
+        super.numer_PZ = numer_PZ;
         super.generuj_ID(id);
 
         super.dane_producenta = new Dane_Producenta(dane_producenta);
@@ -40,12 +40,12 @@ public class Oscierznica extends Produkt
         this.material = oscierznica.material;
     }
 
-    public Oscierznica(int numer_WZ, Dane_Producenta dane_producenta, Wymiary wymiary, String material)
+    public Oscierznica(int numer_PZ, Dane_Producenta dane_producenta, Wymiary wymiary, String material)
     {
         ilosc_stworzonych_oscerznic++;
 
         super.typ = 3;
-        super.numer_PZ = numer_WZ;
+        super.numer_PZ = numer_PZ;
         super.generuj_ID(typ, ilosc_stworzonych_oscerznic - 1);
 
         super.dane_producenta = new Dane_Producenta(dane_producenta);
@@ -96,12 +96,12 @@ public class Oscierznica extends Produkt
     }
 
     // Metody: 
-    public boolean compareTo(Wymiary wymiary)
+    public boolean compare(Wymiary wymiary)
     {
         return this.wymiary.compareTo(wymiary);
     }
 
-    public boolean compareTo(Oscierznica oscierznica)
+    public boolean compare(Oscierznica oscierznica)
     {
         return super.dane_producenta.compareTo(oscierznica.dane_producenta)
                 && this.wymiary.compareTo(oscierznica.wymiary) && this.material.equals(oscierznica.material);

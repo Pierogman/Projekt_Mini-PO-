@@ -21,10 +21,10 @@ public class Baza_Dokumenty_WZ
     private final String lista_zwolnionych_ID_plik = "wolne_ID_wz.txt";
     private final String ile_dok_zw_plik = "ilosc_wz.txt";
 
-    public ArrayList<Dokument_WZ> lista_WZ = new ArrayList<>();
-    public ArrayList<Integer> lista_zwolnionych_ID = new ArrayList<>();
+    private ArrayList<Dokument_WZ> lista_WZ = new ArrayList<>();
+    private ArrayList<Integer> lista_zwolnionych_ID = new ArrayList<>();
 
-    private int ile_dok_zw = 0;
+    private int ile_dok_wz = 0;
 
     public Baza_Dokumenty_WZ()
     {
@@ -33,18 +33,26 @@ public class Baza_Dokumenty_WZ
 
     public void dodaj(Dokument_WZ dokument_wz, Boolean dodaj_ID)
     {
+
         if (dodaj_ID)
         {
-            ile_dok_zw++;
-            int nowe_ID = ile_dok_zw + 2000;
-            
-            if(!lista_zwolnionych_ID.isEmpty())
+            ile_dok_wz++;
+            int nowe_ID = ile_dok_wz + 2000;
+
+            if (!lista_zwolnionych_ID.isEmpty())
             {
                 nowe_ID = lista_zwolnionych_ID.getLast();
                 lista_zwolnionych_ID.removeLast();
-                ile_dok_zw --;
+                ile_dok_wz--;
             }
-            
+
+            if (ile_dok_wz <= 999)
+            {
+                System.err.println("Przekroczono maksymalna liczbe dokumnetow pz!");
+                System.out.println("Nie dodano nowego dokumentu");
+                return;
+            }
+
             lista_WZ.add(new Dokument_WZ(nowe_ID, dokument_wz));
         } else
         {
@@ -88,7 +96,7 @@ public class Baza_Dokumenty_WZ
     {
         for (Dokument_WZ wz : lista_WZ)
         {
-            if (wz.compareTo(numer_ID))
+            if (wz.compare(numer_ID))
             {
                 lista_zwolnionych_ID.add(wz.usun());
                 lista_WZ.remove(wz);
@@ -96,12 +104,12 @@ public class Baza_Dokumenty_WZ
             }
         }
     }
-    
+
     public Dokument_WZ zwroc(int numer_ID)
     {
-        for (Dokument_WZ wz: lista_WZ)
+        for (Dokument_WZ wz : lista_WZ)
         {
-            if (wz.compareTo(numer_ID))
+            if (wz.compare(numer_ID))
             {
                 return wz;
             }
@@ -138,7 +146,7 @@ public class Baza_Dokumenty_WZ
 
             if ((linia = reader_il.readLine()) != null)
             {
-                ile_dok_zw = Integer.parseInt(linia);
+                ile_dok_wz = Integer.parseInt(linia);
             }
             reader_il.close();
 
@@ -187,7 +195,7 @@ public class Baza_Dokumenty_WZ
 
             for (Dokument_WZ wz : lista_WZ)
             {
-                writer_ld.write(wz.daneBazoweDoZapisu());
+                writer_ld.write(wz.formatuj_do_zapisu());
                 writer_ld.newLine();
             }
 
@@ -196,7 +204,7 @@ public class Baza_Dokumenty_WZ
             // Zapisywanie ilosci stworzonych wz
             BufferedWriter writer_il = Files.newBufferedWriter(dwz_baza_scierzka_ilosc, StandardCharsets.UTF_8);
 
-            writer_il.write(String.valueOf(ile_dok_zw));
+            writer_il.write(String.valueOf(ile_dok_wz));
             writer_il.close();
 
             // Zapisywanie identyfikatorów do ponownego urzycia
@@ -217,7 +225,13 @@ public class Baza_Dokumenty_WZ
         } catch (SecurityException e)
         {
             System.err.println("Problem z dostępem");
+        } catch (Exception e)
+        {
+            System.err.println("Nie zapisano bazy!");
+            return;
         }
+
+        System.out.println("Zapisano baze dokumentow wz!");
     }
 
 }

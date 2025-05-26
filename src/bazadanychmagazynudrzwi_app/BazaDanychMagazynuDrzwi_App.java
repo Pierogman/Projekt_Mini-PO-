@@ -1,5 +1,9 @@
 package bazadanychmagazynudrzwi_app;
 
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class BazaDanychMagazynuDrzwi_App
@@ -16,42 +20,42 @@ public class BazaDanychMagazynuDrzwi_App
         Boolean wyloncz_program = false;
 
         Scanner sc = new Scanner(System.in);
-        int user_resp;
+        String[] user_resp;
+        System.out.println("Witam w bazie danych magazynu drzwi! \n");
+
         while (!wyloncz_program)
         {
             System.out.println("""
-                               Witam w bazie danych magazynu drzwi! 
-                               
-                               Wybierz jaka czesc bazy chcialbys edytowac:
-                               
-                               [1] Narzedzia "Bazy prodoktow" 
-                               [2] Narzedzia "Bazy dokumentow WZ"
-                               [3] Narzedzia "Bazy dokumentow PZ"
-                               
-                               [0] Opusc program (Dane zostana zapisane)                               
+                               Wpisz:
+                               com - aby wypisac wszystkie dostepne komendy
+                               end - aby zamkac program (baza zostanie zapisana)
                                """);
             System.out.print("Wybrana opcja: ");
-            user_resp = sc.nextInt();
+            user_resp = sc.nextLine().split("-");
 
-            switch (user_resp)
+            switch (user_resp[0])
             {
                 // Narzędzia bazy porduktów:
-                case 1:
-                    Baza_produktow(baza_p, gen_csv, baza_wz, baza_pz);
+                case "pr":
+                    Baza_produktow(baza_p, gen_csv, baza_wz, baza_pz, user_resp);
                     break;
-                case 2:
-                    Baza_dokumentow_WZ(baza_p, baza_wz);
+                case "wz":
+                    Baza_dokumentow_WZ(baza_p, baza_wz, user_resp);
                     break;
-                case 3:
-                    Baza_dokumentow_PZ(baza_p, baza_pz);
+                case "pz":
+                    Baza_dokumentow_PZ(baza_p, baza_pz, user_resp);
                     break;
-                case 0:
+                case "com":
+                    Wypisz_komendy();
+                    break;
+                case "end":
                     System.out.println("Wylaczanie programu");
                     wyloncz_program = true;
                     break;
                 default:
                     System.out.println("Blendny Input!\n\n");
             }
+            System.out.println();
         }
 
         baza_p.zapisz_stan();
@@ -62,135 +66,142 @@ public class BazaDanychMagazynuDrzwi_App
 
     }
 
+    static void Wypisz_komendy()
+    {
+        try
+        {
+            Path spis_komend = Paths.get("./Dane/komendy.txt");
+            
+            BufferedReader reader = Files.newBufferedReader(spis_komend);
+            
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                System.out.println(line);
+            }
+            
+            reader.close();
+        }
+        catch(Exception e)
+        {
+            System.err.println("Nie znaleziono spisu komend!");
+        }
+        
+    }
+
     // Czesc kontroli bazy porduktow
-    static void Baza_produktow(Baza_Produkty baza_p, Generator_CSV gen_csv, Baza_Dokumenty_WZ baza_wz, Baza_Dokumenty_PZ baza_pz)
+    static void Baza_produktow(Baza_Produkty baza_p, Generator_CSV gen_csv, Baza_Dokumenty_WZ baza_wz, Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        switch (user_resp[1])
         {
-            System.out.println("""
-                           Narzedzia BAZY PRODOKTOW
-                           [1] Przegladanie  
-                           [2] Generowanie csv 
-                           [0] Powrot                     
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
-            switch (user_resp)
-            {
-                case 1:
-                    Przeglondaj_P(baza_p);
-                    break;
-                case 2:
-                    Generowanie_csv(gen_csv, baza_p);
-                    break;
-                case 0:
-                    System.out.println("Wracanie od ekranu glownego!");
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!\n\n");
-                    break;
-            }
+            case "prz":
+                Przeglondaj_P(baza_p, user_resp);
+                break;
+            case "csv":
+                Generowanie_csv(gen_csv, baza_p, user_resp);
+                break;
+            default:
+                System.out.println("Blendny Input!\n\n");
+                break;
         }
     }
 
-    static void Przeglondaj_P(Baza_Produkty baza_p)
+    static void Przeglondaj_P(Baza_Produkty baza_p, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
-        {
-            System.out.println("""
-                           Narzedzia BAZY PRODUKTOW -> PRZEGLADAJ
-                           Wybierz jakie produkty chcesz wyswietlic?
-                           [1] Wszystkie 
-                           [0] Powrot        
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = Integer.parseInt(sc.nextLine());
 
-            switch (user_resp)
-            {
-                case 1:
-                    System.out.println("To sa aktualnie wszystkie produkty w bazie:");
-                    baza_p.wypisz();
-                    break;
-                case 0:
-                    System.out.println("Wracanie od ekranu glownego!");
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!\n\n");
-                    break;
-
-            }
-        }
-    }
-
-    static void Generowanie_csv(Generator_CSV gen_csv, Baza_Produkty baza_p)
-    {
-        System.out.println("""
-                           Narzedzia danych BAZY PRODUKTOW -> GENEROWANIE CSV
-                           Podaj scierzke pliku w ktorym chcesz aby zostal wygenerowany text.
-                           """);
         Scanner sc = new Scanner(System.in);
-        System.out.print("Scierzka pliku");
-        String scierzka = sc.nextLine();
-        baza_p.wypisz();
-        gen_csv.generuj(baza_p, scierzka);
+
+        switch (user_resp[2])
+        {
+            case "wszystkie":
+                System.out.println("To sa aktualnie wszystkie produkty w bazie:");
+
+                baza_p.wypisz();
+                break;
+            case "nrpz":
+                System.out.print("Podaj numer dokumentu pz: ");
+                int user_resp_1 = sc.nextInt();
+                System.out.println("To sa wszystkie obecne produkty z dokumentu pz: " + user_resp_1);
+
+                baza_p.wypisz(user_resp_1);
+                break;
+            case "prod":
+                System.out.print("Podaj nazwe producenta: ");
+                String user_resp_2 = sc.nextLine();
+                System.out.println("To sa wszystkie obecne produkty producenta: " + user_resp_2);
+
+                Dane_Producenta nowy_producent = new Dane_Producenta(user_resp_2, "*");
+                baza_p.wypisz(nowy_producent);
+                break;
+            default:
+                System.out.println("Blendny Input!\n\n");
+                break;
+        }
+    }
+
+    static void Generowanie_csv(Generator_CSV gen_csv, Baza_Produkty baza_p, String[] user_resp)
+    {
+        Scanner sc = new Scanner(System.in);
+
+        switch (user_resp[2])
+        {
+            case "wszystkie":
+                System.out.print("Podaj gdzie ma zostac wygenerowany dokument: ");
+                String scierzka_1 = sc.nextLine();
+
+                gen_csv.generuj(baza_p, scierzka_1);
+                break;
+            case "nrpz":
+                System.out.print("Podaj gdzie ma zostac wygenerowany dokument: ");
+                String scierzka_2 = sc.nextLine();
+                System.out.print("Podaj numer dokumentu pz: ");
+                int numer_dokumentu = sc.nextInt();
+                System.out.println("Generowanie pliku z obecnymi w bazie danych produktami dokumentu pz:" + numer_dokumentu + "do scierzki" + scierzka_2);
+
+                gen_csv.generuj(baza_p, scierzka_2, numer_dokumentu);
+                break;
+            case "prod":
+                System.out.print("Podaj gdzie ma zostac wygenerowany dokument: ");
+                String scierzka_3 = sc.nextLine();
+                System.out.print("Podaj nazwe producenta: ");
+                String producent = sc.nextLine();
+                System.out.println("Generowanie pliku z obecnymi w bazie danych profuktami producenta: " + producent + "do scierzki" + scierzka_3);
+
+                Dane_Producenta nowy_producent = new Dane_Producenta(producent, "*");
+                gen_csv.generuj(baza_p, scierzka_3, nowy_producent);
+                break;
+            default:
+                System.out.println("Blendny Input!\n\n");
+                break;
+        }
 
     }
 
     // Czensc kontroli bazy dokumentow WZ
-    static void Baza_dokumentow_WZ(Baza_Produkty baza_p, Baza_Dokumenty_WZ baza_wz)
+    static void Baza_dokumentow_WZ(Baza_Produkty baza_p, Baza_Dokumenty_WZ baza_wz, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        switch (user_resp[1])
         {
-            System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW WZ:
-                           [1] Dodaj WZ
-                           [2] Usun WZ
-                           [3] Przegladaj
-                           [4] Realizuj WZ
-                           [0] Powrot 
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
-            switch (user_resp)
-            {
-                case 1:
-                    Dodaj_WZ(baza_wz);
-                    break;
-                case 2:
-                    Usun_WZ(baza_wz);
-                    break;
-                case 3:
-                    Przeglondaj_WZ(baza_wz);
-                    break;
-                case 4:
-                    Realizuj_WZ(baza_p, baza_wz);
-                case 0:
-                    System.out.println("Wracanie od ekranu glownego!");
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!\n\n");
-                    break;
-            }
-
+            case "dodaj":
+                Dodaj_WZ(baza_wz);
+                break;
+            case "usun":
+                Usun_WZ(baza_wz, user_resp);
+                break;
+            case "prz":
+                Przeglondaj_WZ(baza_wz, user_resp);
+                break;
+            case "realizuj":
+                Realizuj_WZ(baza_p, baza_wz);
+                break;
+            default:
+                System.out.println("Blendny Input!\n\n");
+                break;
         }
     }
 
     static void Dodaj_WZ(Baza_Dokumenty_WZ baza_wz)
     {
-        System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW WZ -> DODAJ WZ
-                           Podarzaj za instrukcjami porgramu aby dodac nowy dokument wz do bazy danych.
-                           """);
         String imie, nazwisko, nazwa_firmy, scierzka;
         Scanner sc = new Scanner(System.in);
 
@@ -210,104 +221,69 @@ public class BazaDanychMagazynuDrzwi_App
         baza_wz.dodaj(new Dokument_WZ(nowy_pracownik, nazwa_firmy, scierzka), true);
     }
 
-    static void Usun_WZ(Baza_Dokumenty_WZ baza_wz)
+    static void Usun_WZ(Baza_Dokumenty_WZ baza_wz, String user_resp[])
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        Scanner sc = new Scanner(System.in);
+
+        switch (user_resp[2])
         {
-            System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW WZ -> USUN WZ
-                           Wybierz jak chcesz usunac dokument!
-                           [1] Po numerze ID
-                           [2] Po nazwie firmy
-                           [0] Powrot
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
+            case "nrid":
+                System.out.print("Wpisz numer ID dokumentu do usuniencia: ");
+                int numer_dokumentu = sc.nextInt();
+                System.out.println("Usuwanie dokumentu: " + baza_wz.zwroc(numer_dokumentu).toString());
 
-            switch (user_resp)
-            {
-                case 1:
-                    System.out.print("Wybrany numer ID: ");
-                    sc.reset();
-                    int user_resp_2 = sc.nextInt();
-                    baza_wz.usun(user_resp_2);
-                    System.out.print("Usunieto wybrany dokument!");
-                    break;
-                case 2:
-                    System.out.print("Dokumenty wybranej firmy: ");
-                    sc.reset();
-                    String user_resp_3 = sc.nextLine();
-                    baza_wz.usun(user_resp_3);
-                    System.out.print("Usunieto dokumenty wybranej firmy!");
-                    break;
-                case 0:
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!");
-                    break;
+                baza_wz.usun(numer_dokumentu);
+                break;
+            case "firma":
+                System.out.print("Wypisz nazwe firmy ktorej dokumenty chcesz usunac: ");
+                String nazwa_firmy = sc.nextLine();
+                System.out.println("Usuwanie dokumentow firmy: " + nazwa_firmy);
 
-            }
+                baza_wz.usun(nazwa_firmy);
+                break;
+            default:
+                System.out.println("Blendny Input!");
+                break;
         }
 
     }
 
-    static void Przeglondaj_WZ(Baza_Dokumenty_WZ baza_wz)
+    static void Przeglondaj_WZ(Baza_Dokumenty_WZ baza_wz, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        Scanner sc = new Scanner(System.in);
+
+        switch (user_resp[2])
         {
-            System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW WZ -> USUN WZ:
-                           Wybierz jakie dokumenty chcesz wypisac?
-                           [1] Wszystkie 
-                           [2] Konkretnej firmy
-                           [0] Powrot
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
+            case "wszystkie":
+                System.out.println("Wszystkie dokumenty to: ");
 
-            switch (user_resp)
-            {
-                case 1:
-                    System.out.println("Wszystkie dokumenty to: ");
-                    baza_wz.wypisz();
-                    System.out.print("\n");
-                    break;
-                case 2:
-                    System.out.print("Dokumenty wybranej firmy: ");
-                    String user_resp_3 = sc.nextLine();
-                    baza_wz.wypisz(user_resp_3);
-                    System.out.print("\n");
-                    break;
-                case 0:
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!");
-                    break;
+                baza_wz.wypisz();
+                break;
+            case "firma":
+                System.out.print("Podaj dokument nazwe firmy ktorej dokumety chcesz wypisac: ");
+                String nazwa_firmy = sc.nextLine();
+                System.out.println("Wypisywanie dokumentow firmy: " + nazwa_firmy);
 
-            }
+                baza_wz.wypisz(nazwa_firmy);
+                break;
+            default:
+                System.out.println("Blendny Input!");
+                break;
+
         }
     }
 
     static void Realizuj_WZ(Baza_Produkty baza_p, Baza_Dokumenty_WZ baza_wz)
     {
-        System.out.println("""
-                           Narzedzia BAZY PRODOKTOW -> REALIZUJ WZ
-                           Wybierz numer indetyfikacyjny dokumentu wz do zrealizowania.
-                           """);
-        System.out.print("Wybrany dokument: ");
         Scanner sc = new Scanner(System.in);
 
-        int user_resp = Integer.parseInt(sc.nextLine());
+        System.out.print("Podaj numer identyfikacyjny dokumentu wz do zrealizowania: ");
+        int numer_dokumentu = Integer.parseInt(sc.nextLine());
 
-        Dokument_WZ nowy_dokument_wz = baza_wz.zwroc(user_resp);
+        Dokument_WZ nowy_dokument_wz = baza_wz.zwroc(numer_dokumentu);
         if (nowy_dokument_wz != null)
         {
+            System.out.println("Realizowanie dokumentu: " + baza_wz.zwroc(numer_dokumentu).toString());
             baza_p.usun(nowy_dokument_wz);
         } else
         {
@@ -317,53 +293,31 @@ public class BazaDanychMagazynuDrzwi_App
     }
 
     // Czesc knontroli bazy dokumentow PZ
-    static void Baza_dokumentow_PZ(Baza_Produkty baza_p, Baza_Dokumenty_PZ baza_pz)
+    static void Baza_dokumentow_PZ(Baza_Produkty baza_p, Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        switch (user_resp[1])
         {
-            System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW PZ:
-                           [1] Dodaj PZ
-                           [2] Usun PZ                           
-                           [3] Przegladaj  
-                           [4] Realizuj PZ
-                           [0] Powrot 
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
-            switch (user_resp)
-            {
-                case 1:
-                    Dodaj_PZ(baza_pz);
-                    break;
-                case 2:
-                    Usun_PZ(baza_pz);
-                    break;
-                case 3:
-                    Przeglondaj_PZ(baza_pz);
-                    break;
-                case 4:
-                    Realizuj_PZ(baza_p, baza_pz);
-                case 0:
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!");
-                    break;
-            }
-
+            case "dodaj":
+                Dodaj_PZ(baza_pz);
+                break;
+            case "usun":
+                Usun_PZ(baza_pz, user_resp);
+                break;
+            case "prz":
+                Przeglondaj_PZ(baza_pz, user_resp);
+                break;
+            case "realizuj":
+                Realizuj_PZ(baza_p, baza_pz);
+                break;
+            default:
+                System.out.println("Blendny Input!");
+                break;
         }
 
     }
 
     static void Dodaj_PZ(Baza_Dokumenty_PZ baza_pz)
     {
-        System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW PZ -> DODAJ PZ
-                           Podarzaj za instrukcjami porgramu aby dodac nowy dokument wz do bazy danych.
-                           """);
         String imie, nazwisko, nazwa_firmy, adres, scierzka;
         Scanner sc = new Scanner(System.in);
 
@@ -385,118 +339,92 @@ public class BazaDanychMagazynuDrzwi_App
         Pracownik nowy_pracownik = new Pracownik(imie, nazwisko);
         baza_pz.dodaj(new Dokument_PZ(nowy_pracownik, nazwa_firmy, adres, scierzka), true);
 
-        System.out.println("Dodano nowy dokument wz!");
-
     }
 
-    static void Usun_PZ(Baza_Dokumenty_PZ baza_pz)
+    static void Usun_PZ(Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        Scanner sc = new Scanner(System.in);
+
+        switch (user_resp[2])
         {
-            System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW PZ -> USUN PZ
-                           Wybierz jak chcesz usunac dokument!
-                           [1] Po numerze ID
-                           [2] Po nazwie firmy
-                           [0] Powrot
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
+            case "nrid":
+                System.out.print("Wpisz numer ID dokumentu do usuniencia: ");
+                int numer_dokumentu = sc.nextInt();
+                System.out.println("Usuwanie dokumentu: " + baza_pz.zwroc(numer_dokumentu).toString());
 
-            switch (user_resp)
-            {
-                case 1:
-                    System.out.print("Wybrany numer ID: ");
-                    sc.reset();
-                    int user_resp_2 = sc.nextInt();
-                    baza_pz.usun(user_resp_2);
-                    System.out.print("Usunieto wybrany dokument!");
-                    break;
-                case 2:
-                    System.out.print("Dokumenty wybranej firmy: ");
-                    sc.reset();
-                    String user_resp_3 = sc.nextLine();
-                    baza_pz.usun(user_resp_3);
-                    System.out.print("Usunieto dokumenty wybranej firmy!");
-                    break;
-                case 0:
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!");
-                    break;
+                baza_pz.usun(numer_dokumentu);
+                break;
+            case "firma":
+                System.out.print("Wypisz nazwe firmy ktorej dokumenty chcesz usunac: ");
+                String nazwa_firmy = sc.nextLine();
+                System.out.println("Usuwanie dokumentow firmy: " + nazwa_firmy);
 
-            }
+                baza_pz.usun(nazwa_firmy);
+                break;
+                
+            case "adres":
+                System.out.print("Wypisz adres z ktorego dokumenty chcesz usunac: ");
+                String adres_firmy = sc.nextLine();
+                System.out.println("Usuwanie dokumentow firmy: " + adres_firmy);
+
+                baza_pz.usun_po_adresie(adres_firmy);
+                break;
+                
+                
+            default:
+                System.out.println("Blendny Input!");
+                break;
+
         }
 
     }
 
-    static void Przeglondaj_PZ(Baza_Dokumenty_PZ baza_pz)
+    static void Przeglondaj_PZ(Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
-        Boolean wyloncz_segment = false;
-        while (!wyloncz_segment)
+        Scanner sc = new Scanner(System.in);
+
+        switch (user_resp[2])
         {
-            System.out.println("""
-                           Narzedzia BAZY DOKUMENTOW PZ -> USUN PZ
-                           Wybierz jakie dokumenty chcesz wypisac?
-                           [1] Wszystkie 
-                           [2] Konkretnej firmy
-                           [3] Z konkretnego adresu
-                           [0] Powrot
-                           """);
-            Scanner sc = new Scanner(System.in);
-            System.out.print("Wybrana opcja: ");
-            int user_resp = sc.nextInt();
-            sc.nextLine();
+            case "wszystkie":
+                System.out.println("Wszystkie dokumenty to: ");
 
-            switch (user_resp)
-            {
-                case 1:
-                    System.out.print("\nZnalezione dokumenty:");
-                    baza_pz.wypisz();
-                    System.out.print("\n");
-                    break;
-                case 2:
-                    System.out.print("\nZnalezione dokumenty podanej firmy:");
-                    String user_resp_3 = sc.nextLine();
-                    baza_pz.wypisz_po_nazwie(user_resp_3);
-                    System.out.print("\n");
-                    break;
-                case 3:
-                    System.out.print("\nZnalezione dokumenty z podanego adresu:");
-                    String user_resp_4 = sc.nextLine();
-                    baza_pz.wypisz_po_adresie(user_resp_4);
-                    System.out.print("\n");
-                    break;
-                case 0:
-                    wyloncz_segment = true;
-                    break;
-                default:
-                    System.out.println("Blendny Input!");
-                    break;
+                baza_pz.wypisz();
+                break;
+            case "firma":
+                System.out.print("Podaj dokument nazwe firmy ktorej dokumety chcesz wypisac: ");
+                String nazwa_firmy = sc.nextLine();
+                System.out.println("Wypisywanie dokumentow firmy: " + nazwa_firmy);
 
-            }
+                baza_pz.wypisz_po_nazwie(nazwa_firmy);
+                break;
+            case "adres":
+                System.out.print("Podaj dokument nazwe firmy ktorej dokumety chcesz wypisac: ");
+                String adres_firmy = sc.nextLine();
+                System.out.println("Wypisywanie dokumentow z podanego adresu: " + adres_firmy);
+
+                baza_pz.wypisz_po_adresie(adres_firmy);
+                break;
+            default:
+                System.out.println("Blendny Input!");
+                break;
+
         }
 
     }
 
     static void Realizuj_PZ(Baza_Produkty baza_p, Baza_Dokumenty_PZ baza_pz)
     {
-        System.out.println("""
-                           Narzedzia BAZY PRODOKTOW -> REALIZUJ PZ
-                           Wybierz numer indetyfikacyjny dokumentu pz do zrealizowania.
-                           """);
-        System.out.print("Wybrany dokument: ");
+        System.out.print("Podaj numer identyfikacyjny dokumentu wz do zrealizowania: ");
+
         Scanner sc = new Scanner(System.in);
 
-        int user_resp = Integer.parseInt(sc.nextLine());
+        int numer_dokumentu = Integer.parseInt(sc.nextLine());
 
-        Dokument_PZ nowy_dokument_pz = baza_pz.zwroc(user_resp);
+        Dokument_PZ nowy_dokument_pz = baza_pz.zwroc(numer_dokumentu);
         if (nowy_dokument_pz != null)
         {
-            baza_p.dodaj(baza_pz.zwroc(user_resp));
+            System.out.println("Realizowanie dokumentu: " + baza_pz.zwroc(numer_dokumentu).toString());
+            baza_p.dodaj(baza_pz.zwroc(numer_dokumentu));
         } else
         {
             System.err.println("Bledny numer identyfikacyjny dokumentu!");

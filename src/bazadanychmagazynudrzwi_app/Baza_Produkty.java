@@ -26,7 +26,7 @@ public class Baza_Produkty
     private int ile_klamki = 0;
     private int ile_drzwi = 0;
 
-    private final String table_format = "%d|%d|%-30s|%-23s|%-10s|%-2s|";
+    private final String table_format = "%d|%d|%.30s|%.23s|%.10s|%.2s|";
     private final String save_format = "%d;%d;%s;%s;%s;%s";
 
     private ArrayList<String> lista_urzytych_ID = new ArrayList<>();
@@ -45,7 +45,6 @@ public class Baza_Produkty
     {
 
         Path dokument_pz_path = Paths.get(dokument_pz.sciezka_dokumentu);
-        System.out.println("Podany dokument to: " + dokument_pz.toString());
 
         try
         {
@@ -128,7 +127,16 @@ public class Baza_Produkty
                 if (i.charAt(0) == '1')
                 {
                     nowe_ID = Integer.parseInt(i);
+                    lista_urzytych_ID.remove(i);
+                    break;
                 }
+            }
+
+            if (ile_drzwi <= 9999)
+            {
+                System.err.println("Liczba możliwych drzwi zostala przekroczona!");
+                System.out.println("Nie dodano drzwi");
+                return;
             }
 
             lista_drzwi.add(new Drzwi(nowe_ID, drzwi));
@@ -148,10 +156,19 @@ public class Baza_Produkty
 
             for (String i : lista_urzytych_ID)
             {
-                if (i.charAt(0) == '1')
+                if (i.charAt(0) == '2')
                 {
                     nowe_ID = Integer.parseInt(i);
+                    lista_urzytych_ID.remove(i);
+                    break;
                 }
+            }
+
+            if (ile_klamki <= 9999)
+            {
+                System.err.println("Liczba możliwych klamek zostala przekroczona!");
+                System.out.println("Nie dodano klamki");
+                return;
             }
 
             lista_klamek.add(new Klamka(nowe_ID, klamka));
@@ -171,10 +188,19 @@ public class Baza_Produkty
 
             for (String i : lista_urzytych_ID)
             {
-                if (i.charAt(0) == '1')
+                if (i.charAt(0) == '3')
                 {
                     nowe_ID = Integer.parseInt(i);
+                    lista_urzytych_ID.remove(i);
+                    break;
                 }
+            }
+
+            if (ile_oscierznic <= 9999)
+            {
+                System.err.println("Liczba możliwych oscierznic zostala przekroczona!");
+                System.out.println("Nie dodano oscierznicy");
+                return;
             }
 
             lista_oscierznic.add(new Oscierznica(nowe_ID, oscierznica));
@@ -189,7 +215,6 @@ public class Baza_Produkty
     public void usun(Dokument_WZ dokument_wz)
     {
         Path dokument_wz_path = Paths.get(dokument_wz.sciezka_dokumentu);
-        System.out.println("Podany dokument to: " + dokument_wz.toString());
         try
         {
             usun(dokument_wz_path);
@@ -218,15 +243,15 @@ public class Baza_Produkty
 
             while ((linia = reader_d.readLine()) != null)
             {
-                int typ = linia.charAt(0) - '0';
-                if (typ == 1)
+                char typ = linia.charAt(0);
+                if (typ == '1')
                 {
                     Drzwi n_drzwi = new Drzwi(linia, true, 0);
                     Boolean znaleziono_el = false;
 
                     for (Drzwi d : nowe_drzwi)
                     {
-                        if (d.compareTo(n_drzwi))
+                        if (d.compare(n_drzwi))
                         {
                             nowe_drzwi.remove(d);
                             znaleziono_el = true;
@@ -239,13 +264,13 @@ public class Baza_Produkty
                         brakujace_produkty.add(linia);
                     }
                 }
-                if (typ == 2)
+                if (typ == '2')
                 {
                     Klamka n_klamka = new Klamka(linia, true, 0);
                     Boolean znaleziono_el = false;
                     for (Klamka k : nowe_klamki)
                     {
-                        if (k.compareTo(n_klamka))
+                        if (k.compare(n_klamka))
                         {
                             nowe_klamki.remove(k);
                             znaleziono_el = true;
@@ -259,13 +284,13 @@ public class Baza_Produkty
                     }
                 }
 
-                if (typ == 3)
+                if (typ == '3')
                 {
                     Oscierznica n_oscierznica = new Oscierznica(linia, true, 0);
                     Boolean znaleziono_el = false;
                     for (Oscierznica o : nowe_oscierznice)
                     {
-                        if (o.compareTo(n_oscierznica))
+                        if (o.compare(n_oscierznica))
                         {
                             nowe_oscierznice.remove(o);
                             znaleziono_el = true;
@@ -291,27 +316,27 @@ public class Baza_Produkty
                     }
                     return do_usuniencia;
                 });
-                
-                lista_klamek.removeIf(klamka -> 
+
+                lista_klamek.removeIf(klamka ->
                 {
-                   boolean do_usuniencia = !nowe_klamki.contains(klamka);
-                   if(do_usuniencia)
-                   {
-                       lista_urzytych_ID.add(Integer.toString(klamka.usun()));
-                   }
-                   return do_usuniencia;
+                    boolean do_usuniencia = !nowe_klamki.contains(klamka);
+                    if (do_usuniencia)
+                    {
+                        lista_urzytych_ID.add(Integer.toString(klamka.usun()));
+                    }
+                    return do_usuniencia;
                 });
-                
-                lista_oscierznic.removeIf(oscierznica -> 
+
+                lista_oscierznic.removeIf(oscierznica ->
                 {
-                   boolean do_usuniencia = !nowe_oscierznice.contains(oscierznica);
-                   if(do_usuniencia)
-                   {
-                       lista_urzytych_ID.add(Integer.toString(oscierznica.usun()));
-                   }
-                   return do_usuniencia;
+                    boolean do_usuniencia = !nowe_oscierznice.contains(oscierznica);
+                    if (do_usuniencia)
+                    {
+                        lista_urzytych_ID.add(Integer.toString(oscierznica.usun()));
+                    }
+                    return do_usuniencia;
                 });
-                
+
             } else
             {
                 System.err.println("Brak produktow na w bazie!");
@@ -332,58 +357,6 @@ public class Baza_Produkty
             System.err.println("Z powodu nie poprawnego formatu nie zrealizowano wz!");
             throw e;
         }
-
-    }
-
-    public void usun(int numer_ID)
-    {
-        for (Drzwi d : lista_drzwi)
-        {
-            if (d.compare_ID(numer_ID))
-            {
-                usun(d);
-                return;
-            }
-        }
-
-        for (Klamka k : lista_klamek)
-        {
-            if (k.compare_ID(numer_ID))
-            {
-                usun(k);
-                return;
-            }
-        }
-
-        for (Oscierznica o : lista_oscierznic)
-        {
-            if (o.compare_ID(numer_ID))
-            {
-                usun(o);
-                return;
-            }
-        }
-    }
-
-    private void usun(Drzwi drzwi)
-    {
-        lista_urzytych_ID.add(Integer.toString(drzwi.usun()));
-        System.out.println(lista_urzytych_ID);
-        lista_drzwi.remove(drzwi);
-    }
-
-    private void usun(Klamka klamka)
-    {
-        lista_urzytych_ID.add(Integer.toString(klamka.usun()));
-        System.out.println(lista_urzytych_ID);
-        lista_klamek.remove(klamka);
-    }
-
-    private void usun(Oscierznica oscierznica)
-    {
-        lista_urzytych_ID.add(Integer.toString(oscierznica.usun()));
-        System.out.println(lista_urzytych_ID);
-        lista_oscierznic.remove(oscierznica);
 
     }
 
@@ -476,20 +449,20 @@ public class Baza_Produkty
         return nowa_sublista;
     }
 
-    public ArrayList<String> generuj_subliste(Dane_Producenta dane_porducenta, String format)
+    public ArrayList<String> generuj_subliste(Dane_Producenta dane_producenta, String format)
     {
         ArrayList<String> nowa_sublista = new ArrayList<>();
 
         for (Drzwi d : lista_drzwi)
         {
-            if (d.compare_ProducentName(dane_porducenta))
+            if (d.compare_ProducentName(dane_producenta))
             {
                 nowa_sublista.add(d.toFormatedString(format));
             }
         }
         for (Klamka k : lista_klamek)
         {
-            if (k.compare_ProducentName(dane_porducenta))
+            if (k.compare_ProducentName(dane_producenta))
             {
                 nowa_sublista.add(k.toFormatedString(format));
             }
@@ -497,7 +470,7 @@ public class Baza_Produkty
         }
         for (Oscierznica o : lista_oscierznic)
         {
-            if (o.compare_ProducentName(dane_porducenta))
+            if (o.compare_ProducentName(dane_producenta))
             {
                 nowa_sublista.add(o.toFormatedString(format));
             }
@@ -512,14 +485,14 @@ public class Baza_Produkty
 
         for (Drzwi d : lista_drzwi)
         {
-            if (d.compareTo(wymiary))
+            if (d.compare(wymiary))
             {
                 nowa_sublista.add(d.toFormatedString(format));
             }
         }
         for (Oscierznica o : lista_oscierznic)
         {
-            if (o.compareTo(wymiary))
+            if (o.compare(wymiary))
             {
                 nowa_sublista.add(o.toFormatedString(format));
             }
@@ -645,12 +618,19 @@ public class Baza_Produkty
 
         } catch (IOException e)
         {
-            System.err.println("Problem z zapisaniem pliku");
+            System.err.println("Problem z zapisaniem pliku!");
             System.err.println(e);
         } catch (SecurityException e)
         {
-            System.err.println("Problem z dostępem");
+            System.err.println("Problem z dostepem!");
+        } catch (Exception e)
+        {
+            System.err.println("Nie zapisano bazy!");
+            return;
         }
+
+        System.out.println("Zapisano baze produktow!");
+
     }
 
 }

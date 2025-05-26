@@ -36,11 +36,12 @@ public class Dokument_WZ extends Dokument
     @Override
     public String toString()
     {
-        return "WZ #" + daneBazoweDoZapisu();
+        return "WZ #" + super.formatuj_do_zapisu();
     }
 
+    @Override
     public String formatuj_do_zapisu()
     {
-        return daneBazoweDoZapisu();
+        return super.formatuj_do_zapisu();
     }
 }

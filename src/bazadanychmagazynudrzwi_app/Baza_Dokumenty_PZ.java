@@ -45,6 +45,14 @@ public class Baza_Dokumenty_PZ
                 ile_dok_pz--;
 
             }
+
+            if (ile_dok_pz <= 999)
+            {
+                System.err.println("Przekroczono maksymalna liczbe dokumnetow pz!");
+                System.out.println("Nie dodano nowego dokumentu");
+                return;
+            }
+
             lista_PZ.add(new Dokument_PZ(nowe_ID, dokument_pz));
         } else
         {
@@ -86,7 +94,20 @@ public class Baza_Dokumenty_PZ
     {
         for (Dokument_PZ pz : lista_PZ)
         {
-            if (pz.compare_adres(nazwa_firmy))
+            if (pz.compare_name(nazwa_firmy))
+            {
+                lista_zwolnionych_ID.add(pz.usun());
+                lista_PZ.remove(pz);
+                break;
+            }
+        }
+    }
+
+    public void usun_po_adresie(String adres_firmy)
+    {
+        for (Dokument_PZ pz : lista_PZ)
+        {
+            if (pz.compare_adres(adres_firmy))
             {
                 lista_zwolnionych_ID.add(pz.usun());
                 lista_PZ.remove(pz);
@@ -99,7 +120,7 @@ public class Baza_Dokumenty_PZ
     {
         for (Dokument_PZ pz : lista_PZ)
         {
-            if (pz.compareTo(numer_ID))
+            if (pz.compare(numer_ID))
             {
                 lista_zwolnionych_ID.add(pz.usun());
                 lista_PZ.remove(pz);
@@ -112,7 +133,7 @@ public class Baza_Dokumenty_PZ
     {
         for (Dokument_PZ pz : lista_PZ)
         {
-            if (pz.compareTo(numer_ID))
+            if (pz.compare(numer_ID))
             {
                 return pz;
             }
@@ -228,7 +249,14 @@ public class Baza_Dokumenty_PZ
         } catch (SecurityException e)
         {
             System.err.println("Problem z dostepem");
+        } catch (Exception e)
+        {
+            System.err.println("Nie zapisano bazy!");
+            return;
         }
+
+        System.out.println("Zapisano baze dokumentow pz!");
+
     }
 
 }

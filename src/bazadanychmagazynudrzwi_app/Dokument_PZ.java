@@ -42,12 +42,12 @@ public class Dokument_PZ extends Dokument
     @Override
     public String toString()
     {
-        return "PZ #" + daneBazoweDoZapisu() + ";" + adres_firmy;
+        return "PZ #" + super.formatuj_do_zapisu() + ";" + adres_firmy;
     }
 
     public String formatuj_do_zapisu()
     {
-        return daneBazoweDoZapisu() + ";" + adres_firmy;
+        return super.formatuj_do_zapisu() + ";" + adres_firmy;
     }
 
     // Porównanie adresu firmy

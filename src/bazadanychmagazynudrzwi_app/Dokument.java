@@ -8,7 +8,7 @@ public abstract class Dokument
 {
 
     public int numer_ID;
-    private final int typ; // 1 - WZ, 2 - PZ
+    protected final int typ; // 1 - WZ, 2 - PZ
     protected Pracownik pracownik;
     protected String sciezka_dokumentu;
     protected String nazwa_firmy;
@@ -43,13 +43,7 @@ public abstract class Dokument
     // Generowanie ID na podstawie typu i liczby dokumentów
     protected void generuj_ID(int typ, int liczba)
     {
-        this.numer_ID = typ * 1000 + liczba;
-    }
-
-    // Porównanie pracowników
-    public boolean compareTo(Pracownik p)
-    {
-        return this.pracownik.equals(p);
+        this.numer_ID = this.typ * 1000 + liczba;
     }
 
     // Porównanie nazw firm
@@ -58,7 +52,13 @@ public abstract class Dokument
         return this.nazwa_firmy.equalsIgnoreCase(firma);
     }
 
-    public boolean compareTo(int numer_ID)
+    // Porównanie pracowników
+    public boolean compare(Pracownik p)
+    {
+        return this.pracownik.equals(p);
+    }
+
+    public boolean compare(int numer_ID)
     {
         return this.numer_ID == numer_ID;
     }
@@ -74,7 +74,7 @@ public abstract class Dokument
     }
 
     // Pomocnicze do zapisu (dla klas pochodnych)
-    protected String daneBazoweDoZapisu()
+    protected String formatuj_do_zapisu()
     {
         return numer_ID + ";" + pracownik.doPliku() + ";" + nazwa_firmy + ";" + sciezka_dokumentu;
     }

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @author tymku
  */
-public class Generator_CSV extends Baza_Produkty
+public class Generator_CSV 
 {
 
     private final String dafault_scierzka = "./Dane/CSV.csv";
@@ -43,7 +43,7 @@ public class Generator_CSV extends Baza_Produkty
         generuj_plik(wybrane_produkty, wybrana_scierzka);
     }
       
-    public void generuj_plik(ArrayList<String> wybrane_produkty, String wybrana_scierzka)
+    private void generuj_plik(ArrayList<String> wybrane_produkty, String wybrana_scierzka)
     {
         try
         {
