@@ -132,7 +132,7 @@ public class Baza_Produkty
                 }
             }
 
-            if (ile_drzwi <= 9999)
+            if (ile_drzwi >= 9999)
             {
                 System.err.println("Liczba możliwych drzwi zostala przekroczona!");
                 System.out.println("Nie dodano drzwi");
@@ -164,7 +164,7 @@ public class Baza_Produkty
                 }
             }
 
-            if (ile_klamki <= 9999)
+            if (ile_klamki >= 9999)
             {
                 System.err.println("Liczba możliwych klamek zostala przekroczona!");
                 System.out.println("Nie dodano klamki");
@@ -196,7 +196,7 @@ public class Baza_Produkty
                 }
             }
 
-            if (ile_oscierznic <= 9999)
+            if (ile_oscierznic >= 9999)
             {
                 System.err.println("Liczba możliwych oscierznic zostala przekroczona!");
                 System.out.println("Nie dodano oscierznicy");

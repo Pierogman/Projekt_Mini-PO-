@@ -46,7 +46,7 @@ public class Baza_Dokumenty_WZ
                 ile_dok_wz--;
             }
 
-            if (ile_dok_wz <= 999)
+            if (ile_dok_wz >= 999)
             {
                 System.err.println("Przekroczono maksymalna liczbe dokumnetow pz!");
                 System.out.println("Nie dodano nowego dokumentu");
