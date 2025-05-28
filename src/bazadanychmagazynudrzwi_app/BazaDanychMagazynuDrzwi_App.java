@@ -71,27 +71,32 @@ public class BazaDanychMagazynuDrzwi_App
         try
         {
             Path spis_komend = Paths.get("./Dane/komendy.txt");
-            
+
             BufferedReader reader = Files.newBufferedReader(spis_komend);
-            
+
             String line;
             while ((line = reader.readLine()) != null)
             {
                 System.out.println(line);
             }
-            
+
             reader.close();
-        }
-        catch(Exception e)
+        } catch (Exception e)
         {
             System.err.println("Nie znaleziono spisu komend!");
         }
-        
+
     }
 
     // Czesc kontroli bazy porduktow
     static void Baza_produktow(Baza_Produkty baza_p, Generator_CSV gen_csv, Baza_Dokumenty_WZ baza_wz, Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
+        if (user_resp.length < 2)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         switch (user_resp[1])
         {
             case "prz":
@@ -108,6 +113,11 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Przeglondaj_P(Baza_Produkty baza_p, String[] user_resp)
     {
+        if (user_resp.length < 3)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
 
         Scanner sc = new Scanner(System.in);
 
@@ -141,6 +151,12 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Generowanie_csv(Generator_CSV gen_csv, Baza_Produkty baza_p, String[] user_resp)
     {
+        if (user_resp.length < 3)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         Scanner sc = new Scanner(System.in);
 
         switch (user_resp[2])
@@ -156,7 +172,7 @@ public class BazaDanychMagazynuDrzwi_App
                 String scierzka_2 = sc.nextLine();
                 System.out.print("Podaj numer dokumentu pz: ");
                 int numer_dokumentu = sc.nextInt();
-                System.out.println("Generowanie pliku z obecnymi w bazie danych produktami dokumentu pz:" + numer_dokumentu + "do scierzki" + scierzka_2);
+                System.out.println("Generowanie pliku z obecnymi w bazie danych produktami dokumentu pz: " + numer_dokumentu + " do scierzki: " + scierzka_2);
 
                 gen_csv.generuj(baza_p, scierzka_2, numer_dokumentu);
                 break;
@@ -165,7 +181,7 @@ public class BazaDanychMagazynuDrzwi_App
                 String scierzka_3 = sc.nextLine();
                 System.out.print("Podaj nazwe producenta: ");
                 String producent = sc.nextLine();
-                System.out.println("Generowanie pliku z obecnymi w bazie danych profuktami producenta: " + producent + "do scierzki" + scierzka_3);
+                System.out.println("Generowanie pliku z obecnymi w bazie danych profuktami producenta: " + producent + " do scierzki: " + scierzka_3);
 
                 Dane_Producenta nowy_producent = new Dane_Producenta(producent, "*");
                 gen_csv.generuj(baza_p, scierzka_3, nowy_producent);
@@ -180,6 +196,12 @@ public class BazaDanychMagazynuDrzwi_App
     // Czensc kontroli bazy dokumentow WZ
     static void Baza_dokumentow_WZ(Baza_Produkty baza_p, Baza_Dokumenty_WZ baza_wz, String[] user_resp)
     {
+        if (user_resp.length < 2)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         switch (user_resp[1])
         {
             case "dodaj":
@@ -223,6 +245,12 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Usun_WZ(Baza_Dokumenty_WZ baza_wz, String user_resp[])
     {
+        if (user_resp.length < 3)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         Scanner sc = new Scanner(System.in);
 
         switch (user_resp[2])
@@ -250,6 +278,12 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Przeglondaj_WZ(Baza_Dokumenty_WZ baza_wz, String[] user_resp)
     {
+        if (user_resp.length < 3)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         Scanner sc = new Scanner(System.in);
 
         switch (user_resp[2])
@@ -295,6 +329,12 @@ public class BazaDanychMagazynuDrzwi_App
     // Czesc knontroli bazy dokumentow PZ
     static void Baza_dokumentow_PZ(Baza_Produkty baza_p, Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
+        if (user_resp.length < 2)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         switch (user_resp[1])
         {
             case "dodaj":
@@ -343,6 +383,12 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Usun_PZ(Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
+        if (user_resp.length < 3)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         Scanner sc = new Scanner(System.in);
 
         switch (user_resp[2])
@@ -361,7 +407,7 @@ public class BazaDanychMagazynuDrzwi_App
 
                 baza_pz.usun(nazwa_firmy);
                 break;
-                
+
             case "adres":
                 System.out.print("Wypisz adres z ktorego dokumenty chcesz usunac: ");
                 String adres_firmy = sc.nextLine();
@@ -369,8 +415,7 @@ public class BazaDanychMagazynuDrzwi_App
 
                 baza_pz.usun_po_adresie(adres_firmy);
                 break;
-                
-                
+
             default:
                 System.out.println("Blendny Input!");
                 break;
@@ -381,6 +426,12 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Przeglondaj_PZ(Baza_Dokumenty_PZ baza_pz, String[] user_resp)
     {
+        if (user_resp.length < 3)
+        {
+            System.out.println("Blendny Input!\n\n");
+            return;
+        }
+
         Scanner sc = new Scanner(System.in);
 
         switch (user_resp[2])
@@ -414,7 +465,7 @@ public class BazaDanychMagazynuDrzwi_App
 
     static void Realizuj_PZ(Baza_Produkty baza_p, Baza_Dokumenty_PZ baza_pz)
     {
-        System.out.print("Podaj numer identyfikacyjny dokumentu wz do zrealizowania: ");
+        System.out.print("Podaj numer identyfikacyjny dokumentu pz do zrealizowania: ");
 
         Scanner sc = new Scanner(System.in);
 
